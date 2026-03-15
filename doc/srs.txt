@@ -1,0 +1,1543 @@
+Addis Local Service Finder     
+Declaration 
+We declare that this written submission represents our ideas in our own words and where others' 
+ideas or words have been included, we have appropriately cited and referenced the original 
+sources. We also declare that we have adhered to all principles of academic honesty and integrity 
+and have not misrepresented or fabricated or falsified any idea/data/fact/source in our 
+submission. We understand that any violation of the above will be cause for disciplinary action 
+by the Institute and the University. 
+Project Team: Addis Local Service Finder 
+Team Members: 
+Kirubel Nigussie ATE/3046/13 
+Kidist Kinfu ATE/6934/13 
+Kaleab Zelalem ATE/1047/13 
+Henok Alem ATE/4460/13 
+Helen Kedir ATE/6568/13 
+Date: December 28, 2025 
+8 
+2025/26 
+Addis Local Service Finder     
+1. Introduction 
+1.1. Purpose 
+The primary objective of this Software Requirements Specification (SRS) document is to provide 
+a comprehensive and detailed description of the functional and non-functional requirements for 
+the Addis Local Service Finder system. This document serves as the foundational agreement 
+between the development team, project advisors, and stakeholders regarding what the system 
+will accomplish. 
+After reading this SRS document, readers—including developers, testers, project managers, and 
+academic evaluators—should have a clear and unambiguous understanding of: 
+● The system's overall intent and the urban problem it aims to solve in Addis Ababa 
+● The specific features, capabilities, and constraints of the proposed software. 
+● The interactions between different user roles and the system.  
+● The technical specifications necessary for design, implementation, and testing. 
+The General Description section provides a high-level view of the product's context and user 
+ecosystem. The Specific Requirements section details all functional requirements through 
+structured tables and use cases, and defines critical non-functional attributes such as 
+performance, security, and reliability. 
+1.2. Scope 
+The Addis Local Service Finder is a digital platform consisting of a Unified Mobile Application 
+and a secure Admin Web Portal. The system's scope encompasses the following: 
+● For Service Users (Clients): The system provides residents of Addis Ababa with a trusted 
+directory to discover local service providers (e.g., plumbers, electricians, mechanics, 
+tutors, guards). Users can search via: 
+1. Traditional Browsing: Using filters for service type, location, rating, and 
+availability. 
+2. RAG AI Chatbot: A conversational interface allowing natural language queries 
+(e.g., "Find a reliable electrician near Bole"). 
+● For Service Providers: The system offers skilled tradespeople a platform to create 
+verified digital profiles, manage their service listings, and connect with potential clients. 
+● For Administrators: The system includes a secure web portal for managing the platform's 
+integrity. Key functions include: 
+9 
+2025/26 
+Addis Local Service Finder     
+➢ Verifying and approving new service provider registrations. 
+➢ Performing CRUD operations on all platform data. 
+➢ Reviewing and vetting external information retrieved by the RAG system before 
+it enters the trusted database. 
+➢ Monitoring system metrics and user activity. 
+Out of Scope (Explicitly Excluded) 
+1. Payment Processing: The system will not handle financial transactions. Payments are 
+arranged directly between users and providers. 
+2. Dispute Resolution: The platform does not mediate service disputes or guarantee service 
+quality. 
+3. Advanced Background Checks: Verification relies on manual document review by 
+admins, not official criminal background checks. 
+4. Unvetted Internet Data: The RAG system's external retrieval is a staged process; 
+information from the public internet is not directly presented to users without prior admin 
+verification. 
+1.3. Overview 
+This document is structured to guide the reader logically from a high-level understanding to 
+granular technical specifications. 
+The General Description (Section 2) outlines the product's context within the existing service 
+discovery landscape in Addis Ababa, its core functions, the characteristics of its intended users, 
+and any overarching constraints. 
+The Specific Requirements (Section 3) form the core of this document. They are subdivided into: 
+● External Interface Requirements: Describes the system's user interfaces and interactions 
+with hardware, software, and communication protocols. 
+● Functional Requirements: Detailed, numbered tables (FR-01 to FR-10) specifying what 
+the system must do. 
+● Use Cases: Step-by-step narratives (US-01 to US-10) describing how users and the 
+system interact to achieve specific goals, accompanied by a use case diagram. 
+● Non-Functional Requirements: Qualities the system must have, such as performance, 
+security, and reliability. 
+● Other Requirements: Covering database design, design constraints, legal considerations, 
+and more. 
+10 
+2025/26 
+Addis Local Service Finder     
+Finally, the Change Management Process (Section 4) defines the protocol for handling 
+modifications to these requirements. The document concludes with References and Appendices 
+for supplementary information. 
+2. General Description 
+2.1. Product Perspective 
+The Addis Local Service Finder is a self-contained software system designed to bridge a critical 
+market gap in Addis Ababa's rapidly urbanizing environment. It operates as an independent 
+platform but will interact with external mapping services (for geolocation) and potentially search 
+engine APIs (for the enhanced RAG functionality). 
+The Problem Context (Traditional & Digital Systems): 
+● Traditional System (Word-of-Mouth): The dominant, inefficient method relies on 
+fragmented personal networks. This leads to high search friction, inability to verify 
+quality, and no accountability for service providers. 
+● Existing Digital Listings: General online directories or social media groups lack 
+verification, structured data, and intelligent search capabilities. Users face information 
+overload with outdated or unreliable listings. 
+What Addis Local Service Finder Offers: 
+1. Centralization & Verification: It replaces fragmented information with a single, 
+admin-verified directory, establishing trust. 
+2. Intelligent Access: It surpasses basic keyword search with a RAG-powered AI Chatbot, 
+allowing users to find services through natural conversation. 
+3. Dual-Service Model: It categorically supports both short-term Task-Based Services (e.g., 
+plumbing repair) and long-term Contract-Based Employment (e.g., security guard), 
+addressing a wider range of urban needs. 
+4. Managed Openness: Unlike a completely closed system, its enhanced RAG architecture 
+can responsibly incorporate external public information through a strict admin 
+verification gateway, ensuring data quality is maintained while expanding its knowledge 
+base. 
+The system is innovative, acting not just as a directory but as an intelligent conversational agent 
+powered by verified local data. 
+11 
+2025/26 
+Addis Local Service Finder     
+2.2. Product Functions 
+The core mission of the Addis Local Service Finder is to reduce search friction and build trust in 
+finding local services. The product will perform the following primary functions: 
+1. Facilitate Conversational Discovery: Provide a RAG AI Chatbot interface where users 
+can ask complex, natural language questions about services and receive accurate, 
+context-aware responses sourced from the verified database. 
+2. Enable Filtered Browsing: Allow users to browse service providers using intuitive 
+filters (service category, location on a map, customer rating, availability status). 
+3. Manage a Verified Provider Ecosystem: 
+● Allow service providers to register and create detailed professional profiles. 
+● Provide administrators with tools to verify provider credentials and 
+documentation before profile activation. 
+● Implement a staging area to review and clean external data retrieved by the RAG 
+system before integration. 
+4. Connect Users and Providers: Enable direct communication between clients and 
+verified providers through contact information displayed on profiles. 
+5. Maintain Quality through Feedback: Implement a review and rating system where 
+clients can rate services and provide public feedback, creating a reputation mechanism 
+for providers. 
+6. Provide Administrative Oversight: Offer a comprehensive web dashboard for system 
+administrators to monitor key metrics (user counts, pending verifications), manage all 
+data, and ensure platform integrity 
+12 
+ 
+Addis Local Service Finder     2025/26 
+ 
+2.3. User Roles and Characteristics 
+ 
+User Roles Characteristics 
+Client / Service Finder ●  A resident of Addis Ababa seeking local services. 
+● Can be registered or unregistered. 
+● Registered Clients: Can use all search features 
+(chatbot & browsing), save/bookmark providers, 
+submit reviews and ratings, and contact providers 
+directly. 
+● Unregistered Clients: Can browse service listings and 
+use basic search filters but cannot contact providers, 
+submit reviews, or use the bookmarking feature. 
+Registered Service provider ● A skilled professional or business offering services 
+(e.g., plumber, tutor, guard). 
+● Must register and undergo admin verification before 
+their profile becomes active and visible to clients. 
+● Can update their profile information, service lists, 
+pricing, and availability status (Available/Busy). 
+● Can view client inquiries but cannot modify client 
+reviews. 
+System Administrator ● A trusted staff member responsible for platform 
+integrity. 
+● Manages the Admin Web Portal. 
+● Verifies and approves/rejects new service provider 
+registrations and documents. 
+● Manually reviews, edits, and approves external data 
+retrieved by the RAG system from the internet before 
+it is added to the main database. 
+● Has full CRUD (Create, Read, Update, Delete) 
+privileges on all system data. 
+● Monitors system health and user analytics 
+ 
+Table1 : Users roles and characteristics 
+ 13 
+2025/26 
+Addis Local Service Finder     
+2.4. General Constraints 
+The development and operation of the Addis Local Service Finder system are subject to the 
+following general constraints: 
+1. Technological Constraints: 
+● The mobile application must be built using a cross-platform framework (Flutter) 
+to run on both Android (version 5.0+) and iOS (version 8.0+) devices. 
+● The backend and RAG AI components will be implemented primarily using 
+Python (with frameworks like FastAPI) 
+● The system requires a Vector Database (e.g., Chroma DB) for efficient semantic 
+search within the RAG pipeline. 
+● External data retrieval for the enhanced RAG feature will depend on the 
+availability and terms of third-party search engine APIs or web scraping 
+protocols. 
+2. Economic & Operational Constraints: 
+● Initial development is an academic project with zero labor cost. Post-deployment 
+operational costs (cloud hosting, domain, app store fees) are estimated at ~65,000 
+ETB initially and ~5,500 ETB/month. 
+● The system's data verification model requires human administrative labor, 
+creating an ongoing operational cost and a potential bottleneck for scaling. 
+3. Schedule Constraints: The entire project must be designed, implemented, tested, and 
+documented within a two-semester academic timeline (approximately 6-8 months), as per 
+the university's industrial project guidelines. 
+4. Regulatory & Ethical Constraints: The system must comply with relevant Ethiopian 
+data protection guidelines. The manual verification step for external data is a critical 
+constraint to prevent the dissemination of unverified or harmful information. 
+14 
+2025/26 
+Addis Local Service Finder     
+3. Specific Requirements 
+3.1. External Interfaces 
+3.1.1 User Interfaces 
+The Addis Local Service Finder system provides two primary user interfaces: a Unified Mobile 
+Application intended for both clients and service providers, and a Web-Based Admin Portal designed for 
+system administrators. This section describes the major screens and user interaction flows for each 
+interface. 
+3.1.1.1 Mobile Application – Client / Service Finder Flow 
+Splash and Role Selection Screen 
+Upon launching the mobile application, users are initially presented with a Splash Screen displaying the 
+application logo ("Addis Local Service Finder") and an identifying tagline. After a brief display period, or 
+upon user interaction, the application transitions to the Role Selection Screen. 
+The Role Selection Screen presents two prominently displayed options: 
+● Find a Service 
+● Provide a Service 
+Users must select one of these roles to proceed. Additionally, a less prominent “Admin Login” option is 
+provided at the bottom of the screen for authorized administrative users. 
+Figure 1: Application Launch and Role Selection Interface 
+15 
+2025/26 
+Addis Local Service Finder     
+Figure 2: Client login and signup  
+Client / Service Finder Home Page 
+After selecting “Find a Service” and completing the required authentication process, users are directed to 
+the Home Page. 
+The Home Page includes the following components: 
+● A header displaying a personalized welcome message (e.g., “Hello, User Name”). 
+● A prominent search bar with the placeholder text: 
+“Ask for a service… (e.g.,‘plumber near bole’). This serves as the primary access point to the 
+RAG-powered AI chatbot. 
+● A button labeled “Browse & Filter Services” for traditional search. 
+● A section titled “Services Near You”, presenting a scrollable list or grid of service provider cards. 
+● Each provider card displays: Provider name, Service category, Average rating (star-based), 
+Approximate distance and Thumbnail image 
+● A bottom navigation bar with icons for: Home, Saved/Bookmarked Providers, Chat History and 
+User Profile. 
+16 
+2025/26 
+Addis Local Service Finder     
+Figure 3: Client / Service Finder Home Page Interface 
+RAG AI Chatbot Interface 
+Selecting the main search bar or dedicated chat icon opens the RAG AI Chatbot Interface. This 
+interface is designed to resemble a modern messaging application to ensure user familiarity and 
+ease of interaction. 
+Key elements include: 
+● A top navigation bar displaying the chatbot name (e.g., “Service Assistant”). 
+● A text input field at the bottom for entering natural language queries. 
+● AI-generated responses that include: 
+➢ Formatted textual explanations 
+➢ Action buttons such as “View Profile”, linking directly to verified service provider 
+profiles 
+● A visual indicator identifying whether the response was generated from: 
+➢ Verified Database, or 
+➢ External Source (Pending Verification) 
+17 
+2025/26 
+Addis Local Service Finder     
+Figure 4: RAG AI Chatbot Interface 
+3.1.1.2 Mobile Application – Service Provider Flow 
+Service Provider Login and Registration 
+Users who select “Provide a Service” are first directed to the Service Provider Authentication 
+Interface. This interface supports both Sign-Up and Log-In functionalities. 
+● Sign-Up: 
+New service providers are required to create an account by submitting essential 
+information, including full name, phone number, email address, and password. After 
+account creation, providers are redirected to the Service Provider Registration Screen, 
+where they must complete a detailed profile and upload required verification documents. 
+● Log-In: 
+Existing service providers can log in using their registered phone number or email 
+18 
+2025/26 
+Addis Local Service Finder     
+address and password. Secure authentication mechanisms, such as password masking and 
+token-based authorization, are applied to protect user credentials. 
+Figure 5: Service Provider Login and Registration 
+Service Provider Profile Management Screen 
+Users after completed registration successfully and administrative verification gain access to the Service 
+Provider Profile Management Screen. 
+This interface is divided into the following sections: 
+● Profile Overview: Displays the provider’s business name, profile image, overall rating, and an 
+Availability Toggle (Available / Busy). 
+● Edit Profile: Allows providers to update contact information, service descriptions, pricing, and 
+availability. 
+● My Services: Lists offered service categories (e.g., Electrical Installation, Appliance Repair) with 
+options to add, edit, or remove services. 
+● Verification Badge: Clearly indicates verified status. 
+● Client Inquiries and Notifications: Displays recent messages or contact requests from potential 
+clients. 
+19 
+2025/26 
+Addis Local Service Finder     
+Figure 6: Service Provider Profile Management Interface 
+3.1.1.3 Web-Based Admin Portal 
+Admin Portal Dashboard 
+After secure authentication, administrators are presented with the Admin Portal Dashboard, which 
+provides a comprehensive overview of system status and operational metrics. 
+The dashboard displays key indicators, including: 
+● Total registered clients 
+● Total verified service providers 
+● Pending verification requests (highlighted for urgency) 
+● External data entries awaiting review 
+● Recently flagged reviews 
+A persistent navigation sidebar provides access to: 
+● Dashboard 
+● Provider Management 
+● Verification Queue 
+● User Management 
+● System Logs 
+● Settings 
+20 
+2025/26 
+Addis Local Service Finder     
+21 
+2025/26 
+Addis Local Service Finder     
+Figure 7: Admin Portal Dashboard Interface 
+Admin External Data Verification Queue 
+This interface supports the enhanced RAG workflow by allowing administrators to review service 
+provider information retrieved from external sources. 
+Each entry in the verification queue displays: 
+● Retrieved provider data (Name, Phone Number, Service Type) 
+● Source URL 
+● Suggested matches with existing verified providers 
+● Action options: 
+○ Approve & Merge 
+○ Edit & Approve 
+○ Reject 
+22 
+2025/26 
+Addis Local Service Finder     
+Selecting an entry opens a detailed view allowing administrators to compare retrieved data side-by-side 
+with the original source before final approval. 
+Figure 7: Admin External Data Verification Interface 
+3.1.1.4 Supporting Interfaces 
+User Login and Authentication Screen 
+This screen provides secure access to the system and includes: 
+● Email or phone number input 
+● Password field with masking 
+● “Forgot Password” option 
+● “Sign Up” option for new users 
+23 
+2025/26 
+Addis Local Service Finder     
+Figure 8: User Login and Authentication Interface 
+Service Provider Registration Screen 
+This is a multi-step registration interface where service providers submit required information for 
+verification, including: 
+● Legal or personal name 
+● Professional license or tax identification number 
+● Contact details 
+● Physical address 
+● Service categories 
+● Pricing information 
+● Supporting documents (ID, licenses, portfolio images) 
+A disclaimer informs applicants that profiles remain inactive until administrator approval. 
+24 
+2025/26 
+Addis Local Service Finder     
+Figure 9: Service Provider Registration Interface 
+25 
+2025/26 
+Addis Local Service Finder     
+3.1.2  Hardware Interfaces 
+1. Mobile Devices: The Unified Mobile Application requires a smartphone or tablet with 
+the following minimum specifications: 
+● Operating System: Android 5.0 (Lollipop) or later, OR iOS 8.0 or later. 
+● Processor: Capable of running modern cross-platform applications smoothly. 
+● GPS/Location Services: Must be enabled and functional for geolocation-based 
+search features. 
+● Internet Connectivity: Requires an active data connection (Wi-Fi, 3G/4G/5G). 
+● Camera: Required only if future features involve document/image upload for 
+verification. Not mandatory for core version 1.0 functionality. 
+● Storage: Sufficient free space for application installation and caching. 
+2. Admin Workstations: The Admin Web Portal requires a standard computing device 
+(PC/Laptop) with a modern web browser, internet connection, and adequate screen 
+resolution (≥ 1280x720) for effective data management. 
+3.1.3 Software Interfaces 
+1. Mobile Application: 
+● Frontend Framework: Developed using Flutter (Dart SDK). 
+● Target Platforms: Compiled for Android (APK) and iOS (IPA) via Flutter's build 
+system. 
+● Maps Integration: Will integrate with Google Maps API or Mapbox API for 
+geolocation display and distance calculation. 
+● State Management: Provider or Bloc pattern (Flutter-based). 
+2. Backend Server: 
+● Runtime: Python 3.9+. 
+● Web Framework: FastAPI or Django for RESTful API development. 
+● RAG & AI Components: Utilizes libraries such as LangChain, Hugging Face 
+Transformers, and Sentence Transformers for embedding generation and retrieval. 
+● External Search Interface: Integrates with a Search API (e.g., SerpAPI, Google 
+Custom Search JSON API) or a controlled web scraping module. 
+3. Databases: 
+● Primary/Relational Database: PostgreSQL or MySQL for storing structured user 
+data, profiles, reviews, and transactions. 
+● Vector Database: Chroma DB (or similar like Weaviate, Pinecone) for storing and 
+performing similarity search on embeddings of service provider profiles and 
+descriptions. 
+4. Admin Web Portal: 
+● Frontend: Built with React.js (or Next.js) with a component library like 
+Material-UI or Ant Design. 
+26 
+ 
+Addis Local Service Finder     2025/26 
+ 
+● Backend: Shares the same FastAPI/Django backend as the mobile application, 
+accessed via secure REST APIs. 
+ 
+3.1.4. Communications Interfaces 
+1. API Communication: All data exchange between the Mobile Application, Admin Portal, 
+and the Backend Server will occur via HTTPS RESTful APIs using JSON (JavaScript 
+Object Notation) as the primary data interchange format. All endpoints will be versioned 
+(e.g., /api/v1/). 
+2. Security Protocol: All API calls must use HTTPS (TLS 1.2+) to encrypt data in transit. 
+Authentication for API access will be implemented using JWT (JSON Web Tokens) or 
+OAuth 2.0. 
+3. External Service APIs: Communication with third-party services (Mapbox, Google Maps, 
+Search APIs) will use their respective public HTTPS APIs, requiring secure API key 
+management 
+3.2. Functional Requirements 
+3.2.1. User Registration & Role Selection 
+Field  Description 
+ID FR-01 
+Name User Registration & Role Selection 
+Input Selected User Role: 
+ Client / Service Finder 
+  Service Provider 
+● Full Name 
+● Email or Phone Number 
+● Password 
+Condition Users must not already have an existing account registered with the same 
+email or phone number. 
+Process 1. The user enters personal details and selects a user role. 
+2. System validates the input (email/phone format & password 
+strength). 
+3. The system stores the user details in the database. 
+4. If the selected role is Service Provider, mark the account as 
+Pending Verification and trigger the admin verification workflow. 
+5. If the selected role is Client / Service Finder, activate the account 
+immediately. 
+6. The system redirects the user to the corresponding role-based 
+ 27 
+ 
+Addis Local Service Finder     2025/26 
+ 
+interface. 
+Output User account created successfully and assigned to the appropriate role 
+with corresponding access privileges. 
+Error Handling ● If the email or phone is already registered, display an error. 
+● If the input format is invalid, prompt the user to correct it. 
+● If password strength is weak, request a stronger password. 
+● If database save fails, notify the user and retry option 
+Dependencies ● Database 
+● Authentication & Access Control System 
+● Admin Verification Module (for service providers) 
+Additional Notes Role selection determines the user’s navigation flow and accessible 
+features. Service provider accounts require administrative verification 
+before becoming active. 
+Table FR-01: User Registration & Role Selection 
+3.2.2. User Login & Authentication 
+ 
+Field  Description 
+ID FR-02 
+Name User Login & Authentication 
+Input ● Email or Phone Number 
+● Password 
+Condition ● Users must already have a registered account in the system. 
+● Service Provider accounts must be verified before full access. 
+Process 
+1. User enters login credentials. 
+2. The system validates the format of the email/phone and password. 
+3. The system compares credentials with stored records in the database. 
+4. If credentials are valid: 
+● Generate a secure authentication token (session/JWT). 
+● Identify the user’s role (Client, Service Provider, Admin). 
+● Load the corresponding role-based dashboard/interface. 
+5. If the account is a Service Provider and status is Pending 
+Verification, provide restricted access or display verification notice. 
+Output The user is successfully authenticated and logged into the system with 
+access to role-specific features. 
+ 28 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Error Handling ● If credentials are incorrect, display “Invalid login credentials.” 
+●  If the account does not exist, prompt the user to register. 
+●  If the provider is not yet verified, display “Account pending 
+verification.” 
+●  If the account is locked/suspended, deny access and notify the user. 
+●  If the server or network fails, display a retry message. 
+Dependencies ● Database 
+● Authentication & Access Control System 
+● FR-01 User Registration Module 
+Additional Notes The system shall maintain secure user sessions using token-based 
+authentication and shall log login attempts for security monitoring. 
+ 
+Table FR-02: User Login & Authentication 
+ 
+ 
+3.2.3. Traditional Service Browsing & Filtering 
+ 
+Field  Description 
+ID FR-03 
+name Traditional Service Browsing & Filtering 
+Input ● Selected Service Category (e.g., Plumbing, Electrical) 
+● Location Selection (Map radius / Sub-city / Area) 
+● MaxRating (e.g., 5 stars) 
+● Availability Status (Available Now / Offline) 
+● Price Range (Min–Max) 
+● Sort Preference (Rating, Distance, Relevance) 
+Condition ● Users must be authenticated for personalized features (saved filters, 
+bookmarks). 
+● Browsing without login is allowed in view-only mode if the system 
+policy permits. 
+Process ● The user opens the Browse Services interface. 
+● The system retrieves a list of verified service providers. 
+● The user applies one or more filters. 
+● The system dynamically updates the results based on the selected 
+filters. 
+● Users may sort results by rating, distance, or relevance. 
+● Users may optionally view provider details or save a provider to 
+bookmarks. 
+ 29 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Output A filtered, structured list of verified service providers matching the 
+selected criteria. 
+Error Handling ● If no providers match the filters, display “No results found — try 
+adjusting filters.” 
+●  If location access is denied, prompt the user to enable GPS or 
+manually select a location. 
+● If the network connection fails, display a retry option. 
+Dependencies ● Database 
+● Geolocation / Map Service 
+● FR-02 Login Module (for personalized actions) 
+Additional Notes The filter system shall support multiple combinable filters and shall 
+prioritize verified providers in the result ranking. 
+ 
+Table FR-03: Traditional Service Browsing & Filtering 
+ 
+3.2.4. RAG AI Chatbot Conversational Search 
+ 
+Field  Description 
+ID FR-04 
+name AI-Powered Conversational Search (RAG Chatbot) 
+Input ● Natural language query (e.g., “Find a plumber near Bole”) 
+● Optional filters included in the query (price, rating, location) 
+Condition ● Users must be authenticated to save chat history or contact providers 
+directly. 
+● Queries shall operate only on verified provider data unless flagged as 
+pending review. 
+Process 1. The user enters a natural language query in the chatbot interface. 
+2. System converts the query into an embedding and sends it to the 
+Vector Database. 
+3. Vector DB retrieves the most relevant provider records. 
+4. Retrieved data is passed to the RAG engine. 
+5. The RAG model generates a grounded, factual response using verified 
+data. 
+6. The system returns results along with optional quick-action buttons 
+(View Profile, Call, Save). 
+Output AI-generated conversational response containing relevant, verified 
+service provider results. 
+ 30 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Error Handling ● If no relevant results are found, suggest alternative queries. 
+● If the query context is unclear, prompt the user for clarification. 
+● If the AI service fails, fall back to traditional browsing mode. 
+● If retrieved data is unverified, flag it for admin review before display. 
+Dependencies  ● Vector Database 
+ ● RAG Engine / AI Model 
+ ● Provider Database 
+ ● FR-02 Login Module 
+Additional Notes Responses must be grounded in real data to avoid hallucinations. 
+External data retrieval shall require manual administrator validation 
+before publication. 
+ 
+Table FR-04: RAG AI Chatbot Conversational Search 
+ 
+3.2.5. Service Provider Profile Management 
+ 
+ID FR-05 
+Name Service Provider Profile Management 
+Input ● Business / Provider Name 
+● Profile Photo / Logo 
+● Service Description 
+● Service Categories 
+● Contact Details (Phone, Email, Address) 
+● Pricing / Rate Information 
+● Availability Status (Available / Busy) 
+Condition Users must be logged in as a Service Provider and must have a valid account. 
+Process 1. The provider opens the Profile Management interface. 
+2. Provider edits or updates profile fields. 
+3. The system validates the input fields. 
+4. The system stores updated profile data in the database. 
+5. Changes marked as Pending Review if they affect verification status (e.g., 
+license re-upload). 
+Output Profile information updated successfully and reflected in client search results. 
+Error Handling ● If mandatory fields are missing, prompt the user to complete them. 
+● If file/document upload fails, request retry. 
+● If the update conflicts with verification status, show review notification. 
+Dependencies ●   Database 
+ 31 
+ 
+Addis Local Service Finder     2025/26 
+ 
+●   FR-02 Login Module 
+●   FR-06 Verification Workflow 
+Additional Notes Only verified provider profiles will appear in public listings. 
+ 
+Table FR-05: Service Provider Profile Management 
+ 
+3.2.6. Service Provider Verification (Admin) 
+ 
+ID FR-06 
+name Provider Verification Workflow 
+Input ● Uploaded Identification / License Documents 
+● Business Credentials 
+● Proof of Address / Supporting Files 
+Condition Account status must be Pending Verification. 
+Process 1. Service Provider submits verification documents. 
+2. The system stores documents in secure storage. 
+3. Administrator reviews submitted information. 
+4. Admin selects one of the following actions: 
+●  Approve Provider 
+●  Request Additional Information 
+●  Reject Application 
+5. System updates account status accordingly (Verified / Pending / 
+Rejected). 
+6. Provider receives notification of decision. 
+Output The provider account is marked as Verified, Pending, or Rejected. 
+Error Handling ● If documents are invalid or unreadable, request re-submission. 
+● If verification fails, provide feedback to the provider. 
+● If the admin review service is unavailable, queue requests. 
+Dependencies ●   Admin Portal 
+●   Document Storage Service 
+●   Database 
+Additional Notes Only Verified providers appear in search results and AI responses. 
+ 
+Table FR-06: Service Provider Verification (Admin) 
+ 
+ 32 
+ 
+Addis Local Service Finder     2025/26 
+ 
+3.2.7. External Data Retrieval & Staging 
+ 
+ID FR-07 
+name External Data Retrieval & Staging 
+Input ●   Service provider details retrieved from external sources 
+●   Source metadata (URL / Platform / Source Type) 
+●   Extracted attributes (Name, Phone, Category, Address, Service Type) 
+Condition Externally retrieved provider data shall not be stored directly in the 
+verified database until it is reviewed and approved by an administrator. 
+Process 1. System retrieves potential service provider information from trusted 
+external sources (web listings, public directories, etc.). 
+2. Extracted data is stored temporarily in a Staging Database / 
+Temporary Table. 
+3. The system automatically checks for possible duplicates against 
+existing verified provider records. 
+4. Admin views staged entries in the Verification Queue. 
+5. Admin selects one of the following actions: 
+● Approve & Merge with existing provider record 
+● Approve as New Provider 
+● Edit & Approve 
+6. Reject Entry 
+7. Approved data is transferred to the Verified Provider Database. 
+Output External provider data successfully staged, reviewed, and either approved, 
+merged, added as new, or rejected. 
+Error Handling ● If extraction fails, the system retries or flags the entry. 
+● If the data source is untrusted, automatically reject and log the event. 
+● If duplicate conflict is detected, notify the administrator. 
+● If verification is interrupted, keep records in staging with “Pending 
+Review” status. 
+Dependencies ●   External Data Retrieval / API Module 
+●   Staging Database / Temporary Storage 
+●   Admin Verification Portal 
+●   Provider Database 
+Additional Notes ● External Data Retrieval / API Module 
+| ● Staging Database / Temporary Storage 
+| ● Admin Verification Portal 
+| ● Provider Database 
+Table FR-07: External Data Retrieval & Staging 
+ 
+ 33 
+ 
+Addis Local Service Finder     2025/26 
+ 
+3.2.8. Review & Rating System 
+ 
+ID FR-08 
+Name Review & Rating  
+Input ●  Rating Value (1–5 stars) 
+●  Optional Review Comment 
+●  Service Provider ID 
+●  Client/User ID 
+Condition Users must be logged in and must have interacted with the provider. 
+Process 1. The user submits a rating and/or review. 
+2. System validates review content. 
+3. The system stores the review in the database. 
+4. Provider’s average rating is recalculated dynamically. 
+5. Review becomes visible on the provider profile. 
+Output Review successfully posted and provider rating updated. 
+Error Handling ● If a review contains inappropriate content, block submission. 
+● If a duplicate review is detected, notify the user. 
+● If database save fails, retry or notify the user. 
+Dependencies ●   Database 
+●   FR-02 Login Module 
+●   Provider Profile Module 
+Additional Notes Admins may flag, hide, or remove fraudulent or abusive reviews. 
+ 
+Table FR-08: Review & Rating System 
+ 
+ 
+3.2.9. Geolocation-Based Search 
+ 
+ID FR-09 
+Name Geolocation-Based Search 
+Input ●   User location (GPS or manually selected) 
+●   Optional search radius (e.g., 1–10 km) 
+●   Optional distance-based filters 
+Condition Location access must be granted by the user or selected manually. 
+ 34 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Process 1. The system retrieves the user’s geolocation or manually chosen area. 
+2. The system fetches service providers within the defined radius. 
+3. Results are sorted by proximity, relevance, or rating. 
+4. Users may refine results using filters such as Availability or Price 
+Range. 
+Output A list of nearby verified service providers ranked by distance and 
+relevance. 
+Error Handling ● If GPS access is denied, prompt the user to select location manually. 
+● If no providers are found in the selected radius, display alternative 
+suggestions. 
+● If geolocation service fails, fall back to category-based browsing. 
+Dependencies ●  Geolocation / Map API 
+●  Database 
+●  FR-03 Browsing & Filtering Module 
+Additional Notes Geolocation search improves local relevance, supporting both RAG search 
+and traditional browsing. 
+Table FR-09: Geolocation-Based Search 
+ 
+3.2.10. Admin Dashboard & Analytics 
+ 
+ID FR-10 
+Name Admin Dashboard & Analytics 
+Input ●  System activity logs 
+●  User statistics 
+●  Provider verification data 
+●  Review and interaction metrics 
+Condition Users must be authenticated as Administrator. 
+Process 1. Admin logs into the dashboard. 
+2. System retrieves analytics metrics, including: 
+● Total registered providers & clients 
+● Pending verifications 
+● Active vs inactive providers 
+● Recently flagged reviews 
+● System usage trends 
+3. Data is displayed in cards, charts, and tables. 
+4. Admin may filter and export reports for further review. 
+ 35 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Output Administrative dashboard displaying real-time system insights and 
+monitoring indicators. 
+Error Handling ● If the analytics service fails, display fallback statistics. 
+● If data retrieval times out, notify and retry. 
+● If admin role validation fails, deny access. 
+Dependencies  ●   Database 
+ ●   Analytics/Reporting Engine 
+ ●   FR-06 Verification Workflow 
+ ●   Admin Portal 
+Additional Notes Analytics assist administrators in decision-making, monitoring 
+performance, and maintaining data integrity. 
+ 
+Table FR-10: Admin Dashboard & Analytics 
+ 
+3.3. Use Cases 
+3.3.1. Role Selection 
+ 
+3.3.2 Client Registration & Onboarding 
+Use case name Client Registration & Onboarding 
+ID US-01 
+Actors Unregistered user(Client) 
+Triggers User taps “Sign Up” from the login screen or selects “Find a service” on 
+the Role Selection screen without an account. 
+Precondition -User has installed the mobile application. -User has an intent connection. 
+Post condition -A new client account is created. -User is logged in and directed to the client Home Page. -User gains access to all client privileges (full search, bookmarking, 
+reviews).  
+Main course 1.User selects “Sign Up” or “Find  Service”. 
+2.System presents the registration form (Email, Phone, Password, Full 
+Name). 
+ 36 
+ 
+Addis Local Service Finder     2025/26 
+ 
+3.User fills in the required details and submits. 
+4.System validates data (unique email/phone, password strength). 
+5.System creates a new “Client” account in the database. 
+6.System automatically logs the user in and displays the Client Home 
+Page. 
+Alternative 
+course AC1- Social Sign-Up: 
+1.User selects “Sign up with Google”. 
+2.System handles OAuth flow. 
+3.Upon success, system creates/links an account and proceeds to Main 
+Course step 6. 
+Exceptions Ex1- Email/Phone Already Registered: 
+1.System detects duplicate identifier. 
+2.System displays error: “An account with this email/phone already exists. 
+Please log in.” 
+EX2-Weak Password: 
+1.System validates password against policy (e.g 8+ chars). 
+2.If weak, the system displays error: “Password must be at least 8 
+characters long.”  
+ 
+3.3.2. Service Provider Registration & Verification 
+Use case name Service provider Registration and Verification 
+ID US-02 
+Actors Unregistered user(Service provider), System Administrator 
+Triggers User selects “Provide a Service” on the Role Selection screen.  
+Precondition -User has installed the mobile application -User has an internet connection. -User has digital copies of verification documents (ID,license, etc). 
+Post condition -A provider account is created in a “Pending Verification” state. -Administrator is notified of a new pending verification. -Upon admin approval, the provider’s profile becomes active and visible in 
+searches. 
+Main course  1.User selects “Provide a Service”. 
+2.System presents the detailed provider registration form. 
+(Business/Personal details, Tax/License ID, Services, Rates, Location, 
+ 37 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Document upload) 
+3.User fills the form and submits. 
+4.System creates account with status=”Pending” 
+5.System notifies admin via Verification Queue. 
+6.Admin action: Admin reviews documents, approves accounts. 
+7.System updates account status to “Verified”, notifies provider via 
+app/email. 
+Alternative 
+course 
+AC1- Admin Reject Application: 
+1.Admin reviews and finds documents insufficient. 
+2.Admin rejects application, adds a reason. 
+3.System notifies the provider rejection with reason. 
+4.Provider account remains inactive. 
+Exceptions EX1- Incomplete Form Submission 
+1.User attempts to submit with required fields empty. 
+2.System validates and highlights missing fields. 
+EX2- Invalid Document Format 
+1.User uploads an unsupported file type. 
+2.System rejects upload:”Please upload a PDF, JPG, or PNG file.” 
+ 
+3.3.3. Conversational Service Search via RAG Chatbot 
+Use Case Name Conversational Service Search Via RAG Chatbot 
+ID US-03 
+Actors Client (Registered or Unregistered) 
+Triggers User taps the main search bar or a dedicated chat icon labeled "Ask for 
+a service". 
+Precondition -Application is running. -User is on the Client interface. 
+Post Condition -User receives a conversational answer with relevant service provider 
+suggestions. - Potential external data may be staged for admin review (transparent to 
+user). 
+Main Course 1. User opens the RAG Chatbot interface. 
+2. User types/presses a natural language query (e.g., "electrician for 
+home wiring in Kirkos"). 
+3. System processes query: generates embedding, searches Verified 
+ 38 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Vector Database. 
+4. If sufficient matches found (> threshold), system generates a natural 
+language response listing top providers with details and links. 
+5. Response is marked as "From Verified Directory". 
+6. User views results and can tap to see full provider profiles. 
+Alternative Course AC1 - Fallback to External Search: 
+1. Primary search yields insufficient/no results. 
+2. System triggers External Search Module (e.g., via search API). 
+3. Retrieved data is saved to Staging DB with status="Pending". 
+4. System generates a response: "I found limited matches in our 
+verified directory. I've searched for more options and sent them for 
+review. Please check back later." 
+5. Admin is notified via Verification Queue (FR-06/US-08). 
+Exceptions EX1 - Unclear/Ambiguous Query: 
+1. NLP model cannot extract intent (e.g., "help me fix something"). 
+2. System responds: "Could you please specify what service you need 
+and your location?" 
+ 
+3.3.4. Traditional Browsing with Filters 
+ID US-04 
+Actors Client (Registered or Unregistered) 
+Triggers User taps "Browse & Filter Services" button on the Home Page. 
+Precondition User is on the Client interface. 
+Post Condition User views a filtered list of service providers matching selected criteria. 
+Main Course 1. User navigates to the Browse screen. 
+2. System displays default list of providers (e.g., nearest/highest rated). 
+3. User applies filters: selects Service Category (Plumbing), sets Location 
+(5km radius), selects Minimum Rating (4 stars), toggles Available Now. 
+4. System sends filtered request to backend. 
+5. Backend queries database, applies sorting (by distance). 
+ 39 
+ 
+Addis Local Service Finder     2025/26 
+ 
+6. System displays the updated, filtered list. 
+7. The user scrolls through results and can tap any to view the full provider 
+profile. 
+AC1 - Map View 
+Browsing: 
+1. The user selects the "Map View" tab. 
+2. The system displays providers as pins on an interactive map. 
+Alternative Course 
+3. User pans/zooms the map. 
+4. System dynamically loads providers visible in the map viewport. 
+EX1 - No Results 
+Found: 
+1. Applied filters yield zero results. 
+Exceptions 
+2. System displays: "No providers match your filters. Try broadening your 
+search." 
+ 
+3.3.5. View & Contact Service Provider 
+Use Case Name View & Contact Service Provider 
+ID US-05 
+Actors Client , Service Provider 
+Triggers The user taps on a service provider card from search results or the 
+browsing list. 
+Precondition A service provider profile exists and is Verified (active). 
+The user has found the profile via search/browsing. 
+Post Condition Client views the full provider profile. 
+If registered, the client can initiate contact. The provider may receive a 
+notification. 
+Main Course 1. System displays the Provider Profile Page: Name, Photo, Services, 
+Rating, Reviews, Portfolio, Contact Info (phone/email), Location Map. 
+2. For Unregistered Clients: Contact buttons are disabled; a prompt 
+suggests registration to contact. 
+3. For Registered Clients: User can tap "Call", "Message", or "Send 
+Inquiry". 
+4. If "Send Inquiry" is tapped, a pre-formatted message dialog opens for 
+ 40 
+ 
+Addis Local Service Finder     2025/26 
+ 
+the client to send a custom request. 
+5. System logs the inquiry and may send a push/email notification to the 
+provider. 
+Alternative 
+Course 
+AC1-Save/Bookmark Provider: 
+1. Registered client taps "Save" or bookmark icon on profile. 
+2. The system adds the provider to the client's saved list for future access. 
+Exceptions 
+ 
+EX1 - Provider Profile Suspended: 
+1. User accesses a link to a provider whose account was suspended by 
+admin. 
+2. System displays: "This provider's profile is currently unavailable." 
+ 
+3.3.6. Submit Review & Rating 
+Use Case Name Submit Review & Rating 
+ID US-06 
+Actors Client (Registered), Service Provider 
+Triggers Client navigates to a past service interaction or the provider's profile and 
+selects "Leave a Review". 
+Precondition -Client is registered and logged in. -Client has previously contacted the provider through the system (tracked). -Provider profile is active. 
+Post Condition - A new rating and review are attached to the provider's public profile.  -Provider's average rating is recalculated. 
+Main Course 1. On the provider's profile, client taps "Leave Review". 
+2. System displays a rating widget (1-5 stars) and a text box. 
+3. Client selects a star rating and writes an optional review. 4. Client 
+submits the review. 
+5. System validates submission (non-empty rating). 
+6. System saves the review, links it to the provider and client. 
+7. Provider's average rating is updated and displayed. 
+Alternative AC1 - Edit Existing Review: 
+ 41 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Course 1. Client has already submitted a review. 
+2. Client can edit or delete their own review from their activity history. 
+Exceptions EX1 - Review Spam/Abuse Detection: 
+1. System flags review for inappropriate language via basic filter. 
+2. Review is placed in a "Flagged" state for admin moderation before being 
+published. 
+ 
+3.3.7. Service Provider Profile Update 
+Use Case Name Service Provider Profile Update 
+ID US-07 
+Actors Service Provider (Verified) 
+Triggers Provider logs in and taps "Edit Profile" on their management screen. 
+Precondition The provider is registered, verified, and logged in. 
+Post Condition Provider's profile information is updated in the system database. 
+Changes are reflected immediately in public searches. 
+Main Course 1. Provider navigates to Profile Management screen. 
+2. Provider taps "Edit Profile". 
+3. System displays an editable form pre-filled with current data. 
+4. Provider modifies fields (e.g., phone number, service description, adds 
+a new service category, updates hourly rate). 
+5. Provider saves changes. 
+6. System validates and updates the database. 
+7. System confirms "Profile updated successfully." 
+Alternative 
+Course 
+AC1 - Update Availability Status: 
+1. Provider toggles the "Available Now" switch on the main management 
+screen. 
+2. System immediately updates the provider's status in the database, 
+affecting real-time search filters. 
+Exceptions EX1 - Attempt to Modify Verified/Immutable Field: 
+ 42 
+ 
+Addis Local Service Finder     2025/26 
+ 
+1. Provider attempts to change Tax ID or Legal Name. 
+2. System displays: "This field cannot be changed. Contact support for 
+major updates." 
+ 
+ 
+ 
+3.3.8. Admin Verification of External Data 
+Use Case Name Admin Verification of External Data 
+ID US-08 
+Actors System Administrator 
+Triggers New entry appears in the "External Data Verification Queue" on the 
+Admin Dashboard 
+Precondition -RAG system has retrieved external data (FR-07) and saved it to the 
+Staging DB. - Admin is logged into the Admin Web Portal 
+Post Condition - External data is either discarded, added to the main Verified Database, 
+or merged with an existing profile. 
+Main Course 1. Admin navigates to the Verification Queue and sees a new "Pending" 
+entry with retrieved data (name, phone, service, source URL). 
+2. Admin clicks the entry to open detail view. 
+3. System shows the staged data side-by-side with the source webpage 
+(if available) and a search of the current Verified DB for potential 
+matches. 
+4. Admin verifies accuracy: 
+a. Approve & Merge: If it matches an existing verified provider, admin 
+merges the new contact info into that profile. 
+b. Edit & Approve: Admin corrects typos, then approves to create a new 
+verified profile. 
+c. Reject: Admin marks data as spam/inaccurate and deletes it from 
+staging. 
+5. System executes the action, updates the main database accordingly, 
+and removes the item from the queue. 
+ 43 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Alternative Course None 
+Exceptions EX1 - Source URL Unreachable: 
+1. Admin cannot verify because the source link is dead.  
+2. Admin likely chooses "Reject" due to inability to verify. 
+ 
+3.3.9. Admin CRUD Operations on Provider Data 
+ 
+Use Case Name Admin CRUD Operations on Provider Data 
+ID US-09 
+Actors System Administrator 
+Triggers Admin navigates to "Provider Management" section in the Admin 
+Portal. 
+Precondition -Admin is logged into the Admin Web Portal 
+Post Condition - The provider database is modified (Create, Update, Delete) as per 
+admin action 
+Main Course 1. Admin views a list/searchable table of all service providers. 
+2. Create (C): Admin can manually add a new provider profile (useful 
+for bulk onboarding). 
+3. Read (R): Admin can view any provider's full details and edit history. 
+4. Update (U): Admin can edit any field of any provider (e.g., fix a 
+typo, change category, suspend account). 
+5. Delete (D): Admin can permanently deactivate/remove a provider 
+from the system. 
+6. All changes are logged with admin ID and timestamp. 
+Alternative Course AC1 - Bulk Actions: 
+1. Admin selects multiple providers from the list. 
+2. Admin applies a bulk action (e.g., "Approve Selected", "Suspend 
+Selected"). 
+Exceptions EX1 - Dependency Conflict: 
+1. Admin attempts to delete a provider who has active/pending service 
+ 44 
+ 
+Addis Local Service Finder     2025/26 
+ 
+inquiries. 
+2. System warns: "This provider has active engagements. Consider 
+suspending instead." 
+ 
+ 
+ 
+3.3.10. System Monitoring & Analytics 
+Use Case Name System Monitoring & Analytics 
+ID US-10 
+Actors System Administrator 
+Triggers Admin logs into the Admin Portal and views the Dashboard. 
+Precondition -Admin is logged into the Admin Web Portal. 
+Post Condition -Admin gains insights into system usage and health. 
+Main Course 1. Upon login, the system loads the Dashboard. 
+2. System displays visual widgets: Total Users (Clients/Providers), 
+Pending Actions count, Weekly Search Volume chart, Top Services 
+chart, System Uptime indicator. 
+3. Admin can click on any widget to drill down into detailed reports.  
+4. Admin can filter analytics by date range (Last 7 days, Last month, 
+Custom). 
+5. Admin can export report data as CSV. 
+Alternative Course AC1 - Real-Time Alert: 
+1. The system detects anomalies (e.g., sudden traffic spike, error rate 
+increase). 
+2. Dashboard highlights the affected metric in red and sends an alert to 
+admin. 
+Exceptions EX1 - Data Unavailable: 
+1. Analytics service or database is temporarily down. 
+2. Dashboard displays: "Analytics data is currently unavailable. Please 
+try again later." 
+ 45 
+2025/26 
+Addis Local Service Finder     
+3.4. Non-Functional Requirements 
+3.4.1 Performance 
+1. Response Time: The system shall display search results (both from traditional browsing 
+and the RAG Chatbot) within 3 seconds for 95% of queries under normal load conditions 
+on a stable 3G or faster internet connection. 
+2. Throughput: The backend API shall be able to handle a minimum of 50 concurrent users 
+performing various operations without significant degradation in response time. 
+3. RAG Query Processing: The RAG Chatbot shall generate a conversational response to a 
+natural language query within 5 seconds, including time for vector database retrieval and 
+LLM inference. 
+4. Mobile App Performance: The mobile application shall have a cold start time of less 
+than 2 seconds on mid-range Android/iOS devices. Screen transitions shall be smooth 
+with no visible lag. 
+46 
+2025/26 
+Addis Local Service Finder     
+3.4.2. Reliability 
+1. Availability: The core service (mobile app backend and admin portal) shall have an 
+uptime of 99.5% during business hours (6:00 AM - 10:00 PM local time). 
+2. Data Integrity: The system shall ensure that all user data (profiles, reviews, transactions) 
+is consistently saved and retrieved without corruption. Database transactions shall follow 
+ACID properties. 
+3. Error Recovery: In the event of a network interruption during a critical operation (e.g., 
+posting a review, updating a profile), the system shall allow the user to retry the operation 
+seamlessly once connectivity is restored, preserving their input where possible. 
+4. RAG System Reliability: The primary search shall always default to the verified internal 
+database. Failure of the external search module shall not prevent the RAG Chatbot from 
+returning results based on the verified data 
+3.4.3. Availability 
+1. Service Window: The mobile application and its backend services shall be available 24/7. 
+2. Maintenance Downtime: Scheduled maintenance requiring system downtime shall be 
+communicated to users at least 24 hours in advance and shall be performed during 
+periods of lowest usage, preferably between 2:00 AM and 4:00 AM local time. Such 
+maintenance shall not exceed 2 hours per month. 
+3. Admin Portal: The Admin Web Portal shall be accessible to authorized personnel at all 
+times from designated secure networks. 
+3.4.4. Security 
+1. Data in Transit: All communications between the mobile app, admin portal, and the 
+server shall be encrypted using HTTPS (TLS 1.2 or higher). 
+2. Authentication: User authentication shall be performed using secure, industry-standard 
+methods. Passwords shall be hashed using a strong, salted hashing algorithm (e.g., 
+bcrypt) before storage. Session management shall utilize short-lived JWT (JSON Web 
+Tokens). 
+3. Authorization: The system shall enforce role-based access control (RBAC): 
+● Clients can only modify their own data and reviews. 
+● Providers can only modify their own profiles and view their inquiries. 
+● Admins have full CRUD privileges but their actions shall be logged for audit 
+trails. 
+4. Data Privacy: Personal Identifiable Information (PII) such as phone numbers and email 
+addresses shall be masked or hidden from public view by default, only revealed when a 
+user explicitly initiates contact (for providers) or is logged in as an admin. 
+47 
+2025/26 
+Addis Local Service Finder     
+5. Input Validation & Sanitization: All user inputs (especially in the RAG query interface 
+and review fields) shall be validated and sanitized server-side to prevent injection attacks 
+(SQL, XSS). 
+3.4.5. Maintainability 
+1. Code Quality: The codebase shall follow consistent coding standards (PEP 8 for Python, 
+Dart/Flutter conventions) and shall be documented with clear comments, especially for 
+complex modules like the RAG pipeline and external data retrieval. 
+2. Modularity: The system shall be designed with a modular architecture (separating 
+frontend, backend API, RAG service, database layer) to allow for independent updates 
+and maintenance. 
+3. Logging: The system shall maintain comprehensive application logs for errors, user 
+authentication events, admin actions (especially verification decisions), and RAG system 
+performance. Logs shall be retained for at least 90 days. 
+4. Configuration Management: Sensitive configuration data (API keys, database 
+credentials) shall be stored as environment variables, not hard-coded. 
+3.4.6. Portability 
+1. Cross-Platform Mobile App: The unified mobile application shall be built using the 
+Flutter framework to ensure consistent functionality and user experience on both Android 
+(version 5.0 and above) and iOS (version 8.0 and above) platforms from a single 
+codebase. 
+2. Admin Portal Browser Compatibility: The Admin Web Portal shall be fully functional 
+on the latest versions of Google Chrome, Mozilla Firefox, and Microsoft Edge 
+3.5. Inverse Requirements 
+The Addis Local Service Finder is designed specifically as a trusted directory and intelligent 
+connector. Therefore, the system shall explicitly NOT perform the following: 
+1. Direct Financial Transactions: The system shall not process payments, handle escrow 
+services, or manage any form of financial transfer between users and providers. 
+2. Legal or Dispute Resolution: The system shall not act as an arbiter, mediator, or 
+guarantor of service quality. Disputes between clients and providers are outside the 
+system's scope and responsibility. 
+48 
+2025/26 
+Addis Local Service Finder     
+3. Unverified Live Web Search: The RAG Chatbot shall not perform live, unrestricted 
+web searches and present the results directly to users. All external information must pass 
+through the admin verification staging area. 
+4. Automated Background Checks: The system shall not integrate with or perform official 
+criminal record checks, credit checks, or other advanced vetting procedures beyond 
+manual document review by administrators. 
+5. Physical Service Delivery: The system is an information and connection platform. It 
+does not manage logistics, scheduling, or the physical provision of services. 
+3.6. Design Constraints 
+1. Academic Timeline: The entire system must be designed, implemented, tested, and 
+documented within the two-semester academic project timeline (approx. 6-8 months), as 
+per Addis Ababa University's guidelines. 
+2. Technology Stack: The implementation is constrained to specific technologies: 
+● Frontend (Mobile): Flutter (Dart). 
+● Backend: Python (FastAPI/Django). 
+● AI/ML Components: Must utilize open-source or freely available models and 
+libraries (e.g., Hugging Face, LangChain) to minimize cost. 
+● Vector Database: Must use an open-source or free-tier solution (e.g., Chroma 
+DB). 
+3. Data Acquisition Constraint: Building the initial verified database of service providers 
+relies on manual outreach and registration, which may limit the initial volume and 
+coverage of listings. 
+4. "Human-in-the-Loop" Constraint: The system's core value of trust depends on manual 
+admin verification. This creates a design constraint where scalability is limited by 
+available administrative labor for reviewing both new providers and external data. 
+5. Network Dependency: Core application functionality requires an active internet 
+connection. Offline operation is not supported beyond viewing locally cached data. 
+3.7. Logical Database Requirements 
+To ensure data integrity, efficient retrieval (especially for the RAG system), and secure operation, 
+the system's database shall be structured with the following core entities and relationships. 
+49 
+ 
+Addis Local Service Finder     2025/26 
+ 
+ 
+ 
+ 
+ 
+ 
+Database Table Attributes (Key in Bold) Description 
+User ● userId (PK) 
+● email 
+●  phone 
+● hashedPassword 
+● fullName 
+●  userRole (client, provider, 
+admin) 
+● registrationDate 
+● lastLogin 
+● isActive (Boolean) 
+Central table for all system 
+users. Differentiated by 
+userRole. 
+ 
+ClientProfile ● profileId (PK) 
+● userId (FK → User) 
+● savedProviders (Array of 
+providerIds) 
+● locationPreference 
+Extends the User entity with 
+client-specific data. 
+ServiceProvider ● providerId (PK) 
+●  userId (FK → User) 
+● businessName 
+● description 
+● taxOrLicenseId 
+●  serviceCategories (Array) 
+● hourlyRate / projectRate 
+● address 
+● latitude / longitude 
+● isAvailable (Boolean) 
+●  verificationStatus (pending, 
+verified, rejected, suspended) 
+● avgRating (Calculated) 
+● verificationDate 
+● verifiedByAdminId (FK → 
+User) 
+Core table for service 
+providers. verificationStatus 
+is critical for admin 
+workflow. Geolocation fields 
+enable proximity search. 
+ 
+ 50 
+ 
+Addis Local Service Finder     2025/26 
+ 
+ServiceCategory ●  categoryId (PK) 
+● categoryName (e.g., 
+"Plumbing", "Electrical") 
+● serviceType (task_based, 
+contract_based) 
+Lookup table for 
+standardizing service 
+offerings. Supports the Dual 
+Service Model. 
+ 
+ProviderDocument ● docId (PK) 
+● providerId (FK → 
+ServiceProvider) 
+● documentType (e.g., "ID", 
+"License") 
+● fileURL 
+● uploadDate 
+Stores uploaded verification 
+documents for providers. 
+Review ● reviewId (PK) 
+● clientId (FK → User) 
+● providerId (FK → 
+ServiceProvider) 
+● rating (1-5) 
+● comment 
+● reviewDate 
+● isFlagged (Boolean) 
+● adminNotes 
+Stores ratings and reviews. 
+isFlagged allows for admin 
+moderation. 
+ 
+ExternalDataStaging ● stagingId (PK) 
+● retrievedData (JSON: name, 
+phone, service, etc.) 
+● sourceURL 
+● retrievalDate 
+● status (pending, approved, 
+rejected, merged) 
+● reviewedByAdminId (FK → 
+User) 
+● reviewDate 
+● actionTaken 
+Critical table for the enhanced 
+RAG feature. Holds 
+unverified public data until 
+admin action. 
+ 
+ProviderEmbedding ● embeddingId (PK) 
+● providerId (FK → 
+ServiceProvider) 
+● embeddingVector (Array of 
+floats) 
+● lastUpdated 
+Stores the vector embeddings 
+of provider profiles 
+(businessName, description, 
+services) for semantic search 
+in the RAG system. This table 
+may be implemented within 
+ 51 
+2025/26 
+Addis Local Service Finder     
+AuditLog 
+● logId (PK) 
+● adminId (FK → User) 
+● actionType (e.g., 
+"VERIFY_PROVIDER", 
+"EDIT_PROFILE", 
+"APPROVE_EXTERNAL_DA
+TA") 
+● targetEntityId 
+● details (JSON) 
+● timestamp 
+Table: Logical Database Requirement Table 
+3.8. Other Requirements 
+3.8.1. Training Related Requirements 
+the Vector Database (Chroma 
+DB). 
+Logs all administrative 
+actions for security and 
+accountability. 
+1. End-User Training: No formal training is required for Clients or Service Providers. The 
+mobile application shall be designed with intuitive UI/UX principles, guided onboarding, 
+and clear labels to ensure it is self-explanatory. 
+2. Administrator Training: System Administrators will require a one-hour training session 
+covering the use of the Admin Web Portal, focusing on the verification workflows (for 
+new providers and external data), understanding the dashboard metrics, and performing 
+user management operations. 
+3.8.2. Packaging Related Requirements 
+1. Mobile Application Distribution: The final mobile application shall be packaged as: 
+● An .apk file for direct Android installation (for testing). 
+● A published application on the Google Play Store for Android users. 
+● A published application on the Apple App Store for iOS users (subject to Apple's 
+developer account requirements). 
+2. Admin Portal Deployment: The Admin Web Portal shall be packaged as a deployable 
+web application (e.g., Docker container or set of server files) for installation on a secured 
+web server with a dedicated domain (e.g., admin.addisservicefinder.et). 
+52 
+2025/26 
+Addis Local Service Finder     
+3.8.3. Legal Requirements 
+1. Terms of Service & Privacy Policy: The system shall include accessible "Terms of 
+Service" and "Privacy Policy" documents that users must accept during registration. 
+These shall outline data usage, user responsibilities, and the platform's role as a directory, 
+not a service guarantor. 
+2. Data Ownership: User-generated content (reviews, profile descriptions) is licensed to 
+the platform for display purposes. The platform operator reserves the right to remove 
+content that violates policies. 
+3. Compliance: The system's data collection and storage practices shall strive to comply 
+with relevant Ethiopian guidelines and best practices for data protection, though formal 
+legislation may still be under development. 
+3.8.4. Internationalization Requirements 
+1. Primary Language: The system's primary language for UI and content shall be English. 
+2. Local Language Support (Future): The database and UI architecture shall be designed 
+to facilitate the future addition of Amharic language support without major structural 
+changes. 
+3. Currency: All monetary values (provider rates) shall be displayed in Ethiopian Birr 
+(ETB). 
+3.8.5. Reuse Objectives 
+1. Modular RAG Service: The Retrieval-Augmented Generation (RAG) service, including 
+its integration with the vector database and the external data staging workflow, shall be 
+designed as a standalone, reusable microservice. This will allow it to be potentially 
+repurposed for other directory or Q&A applications within similar domains. 
+2. Admin Portal Framework: The secure Admin Web Portal with its CRUD operations, 
+verification queues, and audit logging shall be built using reusable React/Django 
+components that can form the basis for future administrative systems. 
+3. Cross-Platform UI Components: The Flutter-based UI components (role selection, 
+filtered browsing cards, profile views) shall be developed with reusability in mind for 
+future mobile applications developed by the team. 
+4. Change Management Process 
+Given the iterative nature of software development and the potential for evolving requirements, a 
+formal Change Management Process is essential to maintain control over the project's scope and 
+documentation. 
+4.1. Change Initiation 
+53 
+2025/26 
+Addis Local Service Finder     
+Any team member, the advisor (Mr. Yared), or a stakeholder may identify the need for a change. 
+This change could relate to functional requirements, non-functional attributes, design constraints, 
+or project scope. The change must be documented using a Change Request Form (digital or 
+template), which includes: 
+● Change Request ID: Unique identifier. 
+● Date Submitted: Date of request. 
+● Submitted By: Name of person requesting the change. 
+● Description: A clear and detailed description of the proposed change. 
+● Justification: The reason for the change (e.g., new insight, technical constraint, user 
+feedback). 
+● Impact Analysis: Preliminary assessment of the change's impact on schedule, cost, 
+existing functionality, and other requirements. 
+4.2. Change Review & Evaluation 
+1. Internal Team Review: The change request will be discussed in the next scheduled team 
+meeting. All team members must review the request to understand its technical feasibility 
+and workload implications. 
+2. Impact Assessment: The team will collaboratively complete the impact analysis, 
+estimating the additional development, testing, and documentation effort required 
+3. Team Consensus: A change can only proceed to the advisor for approval if all team 
+members are in agreement about its necessity and assessed impact. 
+4.3. Advisor Approval 
+1. Formal Submission: A team representative will formally present the Change Request 
+Form and the team's impact analysis to the project advisor, Mr. Yared. 
+2. Advisor Decision: The advisor will review the request in the context of the project's 
+academic goals, timeline, and overall objectives. The advisor may: 
+● Approve the change. 
+● Request modifications to the proposed change. 
+● Reject the change. 
+3. Final Authority: The advisor's decision is final. No change to the SRS or project scope 
+shall be implemented without the advisor's written (or emailed) approval. 
+4.4. Implementation & Documentation Update 
+54 
+2025/26 
+Addis Local Service Finder     
+1. Update Baseline: Upon approval, the SRS document (this document) shall be officially 
+updated to reflect the change. The Revision History in the Document Approval section 
+(Page 3) shall be updated with a new version number, date, description of the change, and 
+author. 
+2. Communicate Change: All team members will be notified of the approved change and 
+the updated SRS version. 
+3. Project Plan Adjustment: The project's Gantt chart, task assignments, and other 
+management plans shall be adjusted accordingly to accommodate the approved change. 
+4. Traceability: All changes will be tracked so that their implementation can be verified 
+during testing phases. 
+4.5. Change Control Tools 
+● Version Control: Git (via GitHub) will be used to manage all changes to source code and 
+documentation, with commit messages referencing Change Request IDs where 
+applicable. 
+● Communication: Changes will be communicated via official team meeting minutes, the 
+shared project drive, and advisor emails to maintain a clear audit trail. 
+This process ensures that the project remains manageable, the SRS document remains the single 
+source of truth, and all stakeholders are aligned throughout the development lifecycle. 
+55 
+2025/26 
+Addis Local Service Finder     
+References 
+1. Addis Ababa University, College of Technology and Built Environment. Industrial 
+Project Guideline 2025. 
+2. Addis Ababa University, College of Technology and Built Environment. Project Proposal 
+Template 2025. 
+3. Nigussie, K., Kinfu, K., Zelalem, K., Alem, H., & Kedir, H. (2025). Project Proposal: 
+Addis Local Service Finder: A RAG-Powered Conversational Directory for Local 
+Services in Addis Ababa. Addis Ababa University. 
+4. Lewis, P., et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP 
+Tasks. Advances in Neural Information Processing Systems, 33, 9459–9474. (Consulted 
+for RAG implementation methodology). 
+5. IEEE Std 830-1998. IEEE Recommended Practice for Software Requirements 
+Specifications. 
+6. Previous SRS documents from the Department of Software Engineering, Addis Ababa 
+Institute of Technology. 
+7. Flutter Documentation. (2025). https://flutter.dev/docs 
+8. FastAPI Documentation. (2025). https://fastapi.tiangolo.com/ 
+9. LangChain Documentation. (2025). https://python.langchain.com/docs 
+56 
+2025/26 
+Addis Local Service Finder     
+Appendices 
+Appendix A: UI Mockup Sketches (Placeholder) 
+This section will contain the actual UI/UX mockups, wireframes, and screen designs for the 
+mobile application and admin portal. The descriptions in Section 3.1.1 reference these figures. 
+Appendix B: Initial Project Proposal 
+This appendix includes the complete original project proposal document dated November 30, 
+2025, which serves as the foundational business and problem statement for this SRS. 
+Appendix C: RAG System Enhancement Specification 
+This appendix includes the detailed document "RAG connected to the internet.docx*" that 
+specifies the architectural changes required to enable external data retrieval with admin 
+verification, referenced in FR-04, FR-06, FR-07, and US-08. 
+Appendix D: Risk Register 
+A detailed log of identified project risks (e.g., "Technical Complexity of RAG," "Data Collection 
+& Verification," "Schedule Overruns") along with their probability, impact, mitigation strategies, 
+and responsible team members. This expands upon Section 7.3 of the Project Proposal. 
+Appendix E: Glossary of Domain Terms 
+● Task-Based Service: A short-term, one-off service engagement (e.g., fixing a leak, 
+repairing an appliance). 
+● Contract-Based Employment: A long-term service arrangement, often involving recurring 
+work or employment (e.g., security guard, tutor, cleaner). 
+● Verification Staging Database: A temporary, isolated database table that holds unverified 
+information retrieved from external public sources until an administrator reviews it. 
+● Vector Embedding: A mathematical representation (a list of numbers) of a service 
+provider's profile information that allows the RAG system to understand semantic 
+similarity for search. 

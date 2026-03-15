@@ -1,0 +1,2419 @@
+Table of Contents 
+List of Tables.................................................................................................................................................3 
+List of Figures...............................................................................................................................................3 
+Definitions, Acronyms, Abbreviations........................................................................................................4 
+1. Introduction..............................................................................................................................................5 
+1.1 Purpose..............................................................................................................................................5 
+1.2 General Overview..............................................................................................................................5 
+1.3 Development Methods & Contingencies...........................................................................................6 
+2. System Architecture.................................................................................................................................8 
+2.1 Subsystem Decomposition................................................................................................................8 
+2.1.1 Application Layer....................................................................................................................9 
+2.1.2 Presentation Layer....................................................................................................................9 
+2.1.3 Data Layer................................................................................................................................9 
+2.2 Software Mapping............................................................................................................................11 
+2.2.1 Deployment Architecture.......................................................................................................11 
+2.2.2 Development Environments...................................................................................................12 
+2.3 Access Control.................................................................................................................................12 
+2.3.1 User Roles..............................................................................................................................12 
+2.3.2 Authentication and Authorization Mechanism......................................................................13 
+3. Object Model..........................................................................................................................................15 
+3.1 Class Diagram..................................................................................................................................15 
+3.1.1 Core Class Structure...............................................................................................................16 
+3.1.2 Domain Overview..................................................................................................................16 
+3.1.3 Key Class Descriptions..........................................................................................................17 
+3.2 Sequence Diagram...........................................................................................................................19 
+3.3 State Chart Diagram........................................................................................................................25 
+4. Detailed Design.......................................................................................................................................29 
+4.1 User Domain Components...............................................................................................................29 
+4.2 Service Domain Components..........................................................................................................33 
+4.3 RAG System Components...............................................................................................................34 
+4.4 External Data Components..............................................................................................................39 
+4.5 Admin Components.........................................................................................................................41 
+4.6 Service Components........................................................................................................................43 
+4.7 System Specifications......................................................................................................................44 
+4.8 Component Integration Specifications............................................................................................50 
+References...................................................................................................................................................51 
+Bibliography..........................................................................................................................................51 
+Web Resources.......................................................................................................................................51 
+2 
+2025/26 
+Addis Local Service Finder     
+List of Tables 
+Table 1: System permission 
+Table 2: Relationships Summary 
+Table 3: UserDataModel Class 
+Table 3.1: Attributes description for UserDataModel Class 
+Table 3.2: Operation description for UserDataModel Class 
+Table 4: ServiceProviderDataModel Class 
+Table 4.1: Attributes description for ServiceProviderDataModel Class 
+Table 4.2: Operation description for ServiceProviderDataModel Class 
+Table 5: ServiceDataModel Class  
+Table 5.1: Attributes description for ServiceDataModel Class 
+Table 5.2: Operation description for ServiceDataModel Class 
+Table 6: RAGQueryComponent Class 
+Table 6.1:Attributes description for RAGQueryComponent Class 
+Table 7 : RAGResponse Class Definition 
+Table 8 : RAGResponse Class Attributes 
+Table 9: Operation description for RAGQueryComponent Class 
+Table 10: RAGEmbeddingModel Class 
+Table 11 : API Specification 
+Table 11.1: Attributes description for RAGEmbeddingModel Class 
+Table 11.2: Operation description for RAGEmbeddingModel Class 
+Table 12: ExternalDataRetrievalComponent Class 
+Table 12.1: Attributes description for ExternalDataRetrievalComponent Class 
+Table 12.2: Operation description for ExternalDataRetrievalComponent Class 
+Table 13 : VerificationStagingDataModel Class 
+Table 13.1: Attributes description for VerificationStagingDataModel Class 
+Table 13.2: Operation description for VerificationStagingDataModel Class 
+Table 14: AdminVerificationComponent Class 
+Table 14.1: Attributes description for AdminVerificationComponent Class 
+Table 14.2: Operation description for AdminVerificationComponent Class 
+Table 15: LocationService Class 
+Table 15.1: Attributes description for LocationService Class 
+Table 15.2: Operation description for LocationService Class 
+Table 16: API Specification Table 
+Table 17: Security Configuration Table 
+Table 18: Database Schema Definition Table 
+3 
+2025/26 
+Addis Local Service Finder     
+List of Figures 
+Figure 1: Contextual Diagram of Addis Local Service Finder 
+Figure 2: System Architecture 
+Figure 3: System Architecture Layer 2 (Detailed Component View) 
+Figure 4: System Architecture Layer 4 (Data Flow View) 
+Figure 5: Software Mapping Diagram (UML Deployment Diagram) 
+Figure 6: High-Level Class Diagram Overview 
+Figure 7: Sequence Diagram - User Registration Flow 
+Figure 8: Sequence Diagram - RAG Conversational Search 
+Figure 9: Sequence Diagram - External Data Retrieval 
+Figure 10: Sequence Diagram - Admin Verification Process 
+Figure 11: RAG System State Chart Diagram 
+4 
+2025/26 
+Addis Local Service Finder     
+Definitions, Acronyms, Abbreviations 
+RAG: Retrieval-Augmented Generation 
+AI: Artificial Intelligence 
+NLP: Natural Language Processing 
+API: Application Programming Interface 
+CRUD: Create, Read, Update, Delete 
+UI: User Interface 
+UX: User Experience 
+GPS: Global Positioning System 
+JWT: JSON Web Token 
+HTTPS: Hypertext Transfer Protocol Secure 
+TLS: Transport Layer Security 
+DB: Database 
+VPS: Virtual Private Server 
+ETB: Ethiopian Birr 
+SDS: Software Design Specification 
+SRS: Software Requirements Specification 
+MVVM: Model-View-ViewModel (Mobile Architecture) 
+REST: Representational State Transfer 
+LLM: Large Language Model 
+BERT: Bidirectional Encoder Representations from Transformers 
+SQL: Structured Query Language 
+NoSQL: Not Only SQL 
+GIS: Geographic Information System 
+RBAC: Role-Based Access Control 
+ACID: Atomicity, Consistency, Isolation, Durability 
+CI/CD: Continuous Integration/Continuous Deployment 
+Docker: Containerization Platform 
+ORM: Object-Relational Mapping 
+5 
+2025/26 
+Addis Local Service Finder     
+1. Introduction 
+1.1 Purpose 
+This Software Design Specification (SDS) document provides a comprehensive architectural and 
+design blueprint for the Addis Local Service Finder system. The document serves as a technical 
+guide for the development team, detailing the system's architecture, component designs, 
+algorithms, and implementation strategies. It translates the requirements specified in the 
+Software Requirements Specification (SRS) into a concrete design that ensures the system's 
+reliability, scalability, security, and maintainability. 
+The SDS documents the system's decomposition into subsystems, defines the object model with 
+detailed class specifications, outlines critical algorithms (particularly for the RAG system), 
+specifies API interfaces, details security implementations, defines database schemas, and 
+describes deployment strategies. This document will guide all implementation phases and serve 
+as a reference for testing, maintenance, and future enhancements. 
+1.2 General Overview 
+The Addis Local Service Finder is an intelligent digital platform designed to address the 
+challenge of finding reliable local service providers in Addis Ababa. The system combines 
+modern web technologies with advanced AI capabilities to create a trusted, efficient service 
+discovery ecosystem. 
+Core System Components 
+Unified Mobile Application: A cross-platform application built with Flutter that serves both 
+service seekers (clients) and service providers, with dynamic interface adaptation based on user 
+role. 
+RAG-Powered AI Chatbot: The system's intelligence core that enables natural language 
+conversational search for services. The RAG (Retrieval-Augmented Generation) system retrieves 
+information from a verified local database and can extend to external web sources with 
+administrative oversight. 
+Admin Web Portal: A secure management interface for system administrators to verify service 
+providers, review external data, monitor system metrics, and maintain data integrity. 
+External Data Pipeline: A controlled mechanism for retrieving public service information from 
+the internet, staging it for verification, and integrating it into the trusted database after 
+administrative approval. 
+Multi-Database Architecture: A hybrid database system comprising: 
+6 
+2025/26 
+Addis Local Service Finder     
+● Primary relational database (PostgreSQL) for structured data 
+● Vector database (ChromaDB) for semantic search capabilities 
+● Verification staging database for external data review 
+Key Technological Innovations 
+● Hybrid RAG system with fallback logic and external data integration 
+● Role-based access control with three distinct user types 
+● Geolocation-based service discovery with real-time filtering 
+● Manual verification gate for all external data to maintain trust 
+● Cross-platform mobile deployment using Flutter framework 
+Contextual Diagram 
+The Addis Local Service Finder operates within a complex ecosystem involving multiple user 
+types, external services, and data sources. The system mediates between service seekers, service 
+providers, administrators, and external information sources while maintaining data integrity 
+through controlled verification processes. 
+Figure 1: Contextual Diagram of Addis Local Service Finder 
+7 
+2025/26 
+Addis Local Service Finder     
+1.3 Development Methods & Contingencies 
+Development Methodology 
+The project follows an Agile Software Development approach using the Scrum framework, 
+adapted to accommodate the academic timeline and the complexity of RAG AI integration. 
+Key Agile Practices 
+1. Iterative Development: Two-week sprints with defined deliverables 
+2. Incremental Delivery: Functional increments after each sprint 
+3. Continuous Feedback: Regular reviews with advisor and peer testing 
+4. Adaptive Planning: Flexible response to technical challenges 
+Sprint Structure 
+● Sprint 0: Environment setup and architectural foundation 
+● Sprint 1–3: Core database and admin CRUD operations 
+● Sprint 4–6: Mobile app UI/UX and basic browsing 
+● Sprint 7–9: RAG AI Chatbot integration 
+● Sprint 10–12: Advanced features and optimization 
+Technical Stack 
+● Frontend (Mobile): Flutter (Dart SDK), MVVM architecture, Provider pattern 
+● Backend: Python 3.9+, FastAPI, LangChain, Hugging Face Transformers 
+● Databases: PostgreSQL (primary), ChromaDB (vector), PostgreSQL (staging) 
+● Admin Portal: React.js with Material-UI 
+Contingency Planning 
+Technical contingencies address risks including RAG system complexity, external data quality 
+issues, geolocation accuracy, database performance, and admin verification bottlenecks. 
+Mitigation strategies include fallback mechanisms, hybrid approaches, optimization techniques, 
+and tiered verification systems. Project management contingencies address timeline risks, team 
+resource distribution, and technical debt through parallel development, knowledge sharing, and 
+dedicated refactoring sprints. 
+8 
+2025/26 
+Addis Local Service Finder     
+2. System Architecture 
+2.1 Subsystem Decomposition 
+The Addis Local Service Finder system is decomposed into four architectural layers, each with 
+specific responsibilities and components, following a four-level UML component decomposition. 
+To ensure scalability, maintainability, and secure data processing across all subsystems. 
+Figure 2: System Architecture 
+2.1.1 Application Layer 
+The core application services are implemented using a backend service framework (e.g., 
+FastAPI / Node.js / Django). 
+This layer is responsible for: 
+9 
+2025/26 
+Addis Local Service Finder     
+● User authentication and role-based access control 
+● Service browsing, filtering, and geolocation search 
+● RAG AI conversational search orchestration 
+● Provider profile and verification workflow 
+● Data validation and business rule enforcement 
+● Communication between the relational database and vector database 
+The business logic layer acts as the central coordination layer between the user interfaces and 
+data storage components. 
+2.1.2 Presentation Layer 
+This layer consists of the user-facing interfaces: 
+● Mobile Application (Flutter):- used by Clients and Service Providers for service 
+browsing, RAG-based conversational search, provider profile management, and 
+interaction features. 
+● Web-Based Admin Portal (React.js / Web Framework):-used by administrators for 
+provider verification, system monitoring, data management, and analytics. 
+The presentation layer communicates with the backend through secure RESTful APIs. 
+2.1.3 Data Layer  
+The Data Layer is composed of multiple structured storage components to support both 
+application data and AI retrieval: 
+● Relational Database (PostgreSQL / MySQL) 
+Stores users, service providers, reviews, verification records, and transactional data. 
+● Vector Database (FAISS / ChromaDB / Pinecone) 
+Stores semantic embeddings for RAG-based service search to enable natural-language 
+query matching. 
+● Staging Database / Temporary Storage 
+Used for external data retrieval and verification workflow, ensuring that unverified 
+data is not exposed to users until administrator approval. 
+10 
+2025/26 
+Addis Local Service Finder     
+Figure 3: System Architecture Layer 2 (Detailed Component View) 
+11 
+2025/26 
+Addis Local Service Finder     
+Figure 5: System Architecture Layer 4 (Data Flow View) 
+12 
+2025/26 
+Addis Local Service Finder     
+2.2 Software Mapping 
+Figure 6: Software Mapping Diagram (UML Deployment Diagram) 
+2.2.1 Deployment Architecture 
+Mobile Client Layer 
+● Distribution: Google Play Store (Android), App Store (iOS) 
+● Updates: Over-the-air updates for Flutter, store updates for native changes 
+● Caching: SQLite for local data, image caching 
+Database Layer 
+● Primary DB: PostgreSQL with read replicas for scaling 
+● Vector DB: ChromaDB with persistence to disk 
+● Staging DB: Separate PostgreSQL instance for isolation 
+● Connection Pooling: PgBouncer for PostgreSQL connections 
+External Integration 
+● API Rate Limiting: Implemented for all external API calls 
+Network Configuration 
+● SSL/TLS: All communications use HTTPS (TLS 1.2+) 
+13 
+2025/26 
+Addis Local Service Finder     
+● Firewall Rules: Restricted access to database ports 
+● CDN: For static assets and admin portal delivery 
+● DNS: Custom domain with SSL certificate 
+2.2.2 Development Environments 
+1. Local Development: Docker Compose for full stack 
+2. Staging Environment: Mirrors production for testing 
+3. Production Environment: Live deployment with monitoring 
+2.3 Access Control 
+The Addis Local Service Finder system employs a Role-Based Access Control (RBAC) 
+mechanism to ensure secure and controlled access to system resources. Access permissions are 
+assigned according to predefined user roles, and each role is granted only the privileges 
+necessary to perform its authorized operations. The RBAC model enhances system security, 
+minimizes unauthorized actions, and ensures clear separation of responsibilities across users. 
+2.3.1 User Roles 
+a) Client (Service Seeker) 
+Clients represent end-users who search for and interact with service providers. Their permitted 
+actions include: 
+● Searching and browsing available services 
+● Viewing verified provider profiles 
+● Saving providers and search preferences 
+● Submitting ratings and reviews 
+● Contacting service providers through the platform 
+b) Service Provider 
+Service Providers are users who offer professional services on the platform. In addition to all 
+client capabilities, they are authorized to: 
+● Create and manage service listings 
+● Update service and availability status 
+● Upload verification and supporting documents 
+● Respond to client inquiries 
+● View basic performance and engagement metrics 
+14 
+2025/26 
+Addis Local Service Finder     
+c) System Administrator 
+Administrators are responsible for governance, verification, and platform supervision. Their 
+privileges include: 
+● All provider permissions 
+● Verifying and approving service provider accounts 
+● Reviewing and approving externally sourced provider data 
+● Managing user accounts and role assignments 
+● Monitoring platform activity and system metrics 
+● Configuring system settings and operational policies 
+● Accessing audit trails and system logs 
+2.3.2 Authentication and Authorization Mechanism 
+User authentication and authorization are enforced through a token-based authentication 
+framework: 
+● Authentication Method: JSON Web Token (JWT)–based authentication using the 
+Bearer token scheme 
+● Token Model: Short-lived access tokens and long-lived refresh tokens 
+● Security Controls: HTTP-only storage for tokens 
+● Password Policy: Minimum eight-character passwords with complexity requirements; all 
+credentials are securely hashed before storage 
+Permission Matrix 
+System permission Matrix 
+This matrix defines the access levels for different user roles across the system’s core resources 
+and operations. 
+Resource/ Operation 
+Search Services 
+View Provider Details 
+Save Favorites 
+Submit Reviews 
+Client 
+✓ 
+✓ 
+✓  
+Provider 
+✓ 
+✓ 
+Admin 
+✓ 
+✓ 
+✓ 
+✓  
+Contact Provider 
+✓  
+✓ 
+✓ 
+15 
+2025/26 
+Addis Local Service Finder     
+Create Service Listing  
+Update Availability  
+Upload Documents  
+View Analytics  
+Verify Providers   
+Approve External Data   
+Manage Users   
+System Configuration   
+✓ 
+✓ 
+✓  
+✓ 
+✓ 
+✓ 
+✓ 
+✓ 
+✓ 
+✓ 
+✓ 
+Access Audit Logs   
+Table 1: System permission 
+API Access Control 
+● Rate Limiting: Tiered limits based on user role 
+✓ 
+● Endpoint Protection: JWT validation on all protected endpoints 
+● Input Validation: Strict validation on all API inputs 
+● Audit Logging: All privileged operations logged with user context 
+Data Access Control 
+● Row-Level Security: Database-level permission filtering. 
+● Data Segregation: Provider data isolation. 
+● Geographic Restrictions: Location-based data filtering. 
+16 
+2025/26 
+Addis Local Service Finder     
+3. Object Model 
+3.1 Class Diagram 
+The Addis Local Service Finder system follows a layered architecture with clear separation of 
+concerns between presentation, business logic, and data layers. The class diagram represents the 
+core object-oriented design of the system, organized into distinct packages based on functional 
+domains. 
+17 
+2025/26 
+Addis Local Service Finder     
+Figure 7: High-Level Class Diagram Overview 
+3.1.1 Core Class Structure 
+The following points were considered while we are drawing the class diagram: 
+1. Meaningful Naming: Each class name clearly describes its responsibility within the 
+system context. 
+2. Element Identification: All major entities and their relationships were identified from 
+system requirements. 
+3. Clear Responsibilities: Each class has clearly defined attributes and methods representing 
+its responsibilities. 
+4. Minimal Properties: Only essential properties are included to avoid diagram complexity. 
+5. Descriptive Notes: Notes are included where necessary to clarify design decisions. 
+6. Iterative Refinement: The diagram underwent multiple revisions to ensure correctness 
+and clarity. 
+3.1.2 Domain Overview 
+The system is built upon a multi-role architecture designed to facilitate service discovery, 
+interaction, and verification. It integrates a RAG (Retrieval-Augmented Generation) system for 
+conversational queries and a structured review system tied to verified interactions. 
+Core Domains and Relationships 
+User and Authentication Domain 
+● User (Concrete Class): Represents a system account with authentication credentials. 
+● Roles: A User can possess multiple roles (Client, ServiceProvider, Admin) simultaneously, 
+managed via a collection. 
+● Associations: A User maintains a relationship with both ClientProfile and 
+ServiceProviderProfile, which are instantiated based on assigned roles. 
+Profile Domain 
+● ClientProfile: Extends the User account with client-centric data such as saved providers 
+and search history. 
+● ServiceProviderProfile: Extends the User account with business details, service catalogs, 
+and verification status. 
+● Mandatory Link: Both profile types maintain a strict association with their parent User 
+account. 
+Service Interaction Domain 
+18 
+2025/26 
+Addis Local Service Finder     
+● ServiceInquiry: Acts as the bridge for contact requests or bookings between a Client and a 
+ServiceProvider. 
+● Cardinality: A Client (via User role) can initiate many ServiceInquiry objects. 
+A ServiceProvider (via User role) can receive many ServiceInquiry objects. 
+● Review Integrity: A Review is strictly associated with a completed ServiceInquiry to 
+ensure feedback is based on actual interaction. 
+Service Discovery and RAG Domain 
+● Service Offerings: A ServiceProviderProfile maintains a many-to-many relationship with 
+Service objects. 
+● RAG System: The RAGQueryComponent facilitates natural language discovery by 
+utilizing VectorRetriever and LLMService. 
+Verification and Management Domain 
+● Staging: VerificationStagingDataModel serves as a landing zone for external data. 
+● Admin Control: AdminExternalDataComponent manages the verification staging lifecycle. 
+3.1.3 Key Class Descriptions 
+Base Class: User 
+● Attributes: userId, email, phoneNumber, hashedPassword, roles (List), createdAt 
+● Operations: authenticate(), updateProfile(), changePassword() 
+● Relationships: Primary association hub for ClientProfile and ServiceProviderProfile. 
+Profile Class: ClientProfile 
+● Attributes: clientProfileId, userId, savedProviders, searchHistory, notificationPreferences 
+● Operations: searchServices(), saveProvider(), submitReview(), createInquiry() 
+● Relationships: 1:1 with User and 1 to Many with ServiceInquiry. 
+Profile Class: ServiceProviderProfile 
+● Attributes: providerProfileId, userId, businessName, verificationStatus, services, rating, 
+documents 
+● Operations: addService(), updateAvailability(), uploadDocument(), respondToInquiry() 
+● Relationships: 1:1 with User; 1 to Many with ServiceInquiry; 1 to Many with Service. 
+Interaction Class: ServiceInquiry 
+● Attributes: inquiryId, clientId, providerId, serviceId, message, status, createdAt 
+● Operations: updateStatus(), markAsCompleted() 
+● Relationships: Links User (client), User (provider), Service, and Review. 
+Processing Class: RAGQueryComponent 
+● Attributes: queryParser, vectorRetriever, llmService, confidenceThreshold 
+19 
+ 
+Addis Local Service Finder     2025/26 
+ 
+● Operations: processQuery(), retrieveContext(), generateResponse() 
+● Relationships: Dependent on VectorRetriever and LLMService; produces RAGResponse. 
+Management Class: AdminManagementComponent 
+● Attributes: providerRepository, userRepository, auditLogger 
+● Operations: getAllProviders(), updateProviderStatus(), editProviderDetails(), 
+getSystemAnalytics() 
+● Relationships: Manages ServiceProviderProfile and User entities. 
+Relationships: Manages VerificationStagingDataModel, interacts with Administrator 
+ 
+Design Patterns Applied 
+ 
+1. Factory Pattern: UserFactory for creating Client and ServiceProvider instances 
+2. Strategy Pattern: Different retrieval strategies in RAG system 
+3. Observer Pattern: Notification system for verification status updates 
+4. Repository Pattern: Data access abstraction for all entities 
+5. Singleton Pattern: Configuration managers and service locators 
+Relationships Summary 
+Relationship Type Example Description 
+Inheritance User ← ServiceProvider Specialization of general user types (e.g., 
+ServiceProviderDataModel extending 
+UserDataModel). 
+Association RAGQueryComponent → 
+VectorRetriever 
+A "uses" relationship where one component 
+collaborates with another to perform a task. 
+Composition Service → 
+AvailabilitySchedule 
+A strong lifecycle dependency; the schedule 
+cannot exist without the service. 
+Aggregation ServiceProvider → Service A weak lifecycle dependency; services are a 
+collection managed by the provider but can exist 
+independently in logs. 
+Dependency QueryParser → 
+NLPProcessor 
+A temporary usage relationship where one class 
+depends on the signature of another for a specific 
+operation. 
+Table 2: Relationships Summary 
+20 
+2025/26 
+Addis Local Service Finder     
+Note: The complete UML Class Diagram is provided in Figure 7, showing all classes, attributes, 
+methods, and relationships in detail. The diagram follows UML 2.5 standards. 
+3.2 Sequence Diagram 
+Sequence diagrams depict how processes operate with one another and in what order. They show 
+the objects and classes involved in key scenarios and the sequence of messages exchanged 
+between objects to carry out system functionality. 
+Key System Interactions 
+Scenario 1: New user registration process 
+Actors: Client, Mobile App, Authentication Service, Database. 
+Description: Shows the complete flow from user input to successful account creation. 
+21 
+ 
+Addis Local Service Finder     2025/26 
+ 
+ 
+Figure 8: Sequence Diagram - User Registration Flow 
+22 
+2025/26 
+Addis Local Service Finder     
+Objects and Messages 
+1. Client → Mobile App: Submit registration form (name, email, password, userType) 
+2. Mobile App → Authentication Service: validateRegistrationData() 
+3. Authentication Service → Database: checkEmailExists(email) 
+4. Database → Authentication Service: return boolean result 
+5. Authentication Service → Mobile App: validation result 
+6. If validation passes, the mobile application sends the user data to the Authentication 
+Service to create a new user account. The Authentication Service then stores the user 
+information in the database, which returns a unique user ID upon successful insertion. 
+Afterward, the Authentication Service sends a success response along with a JWT token 
+back to the mobile application. Finally, the mobile application notifies the client that the 
+registration was successful. 
+7. If validation fails, the Authentication Service returns an error message to the mobile 
+application, which then displays the relevant error details to the client. 
+Alternative flows include scenarios such as attempting to register with a duplicate email address, 
+encountering a network failure during the registration process, or providing input data in an 
+invalid format. 
+Scenario 2: User searching for services via conversational AI 
+Actors: Client, Mobile App, RAGQueryComponent, VectorRetriever, LLMService, Database 
+Description: Illustrates the RAG pipeline for natural language service queries 
+23 
+2025/26 
+Addis Local Service Finder     
+Figure 9: Sequence Diagram - RAG Conversational Search 
+24 
+2025/26 
+Addis Local Service Finder     
+Objects and Messages 
+1. Client → Mobile App: Enter natural language query ("Find a plumber around CMC") 
+2. Mobile App → RAGQueryComponent: processQuery(query, userId) 
+3. RAGQueryComponent → QueryParser: parseQuery(query) 
+4. QueryParser → RAGQueryComponent: parsed intent and entities 
+5. RAGQueryComponent → VectorRetriever: searchSimilarServices(embedding) 
+6. VectorRetriever → Database: semantic similarity search 
+7. Database → VectorRetriever: relevant service chunks 
+8. VectorRetriever → RAGQueryComponent: retrieved context 
+9. RAGQueryComponent → LLMService: generateResponse(query, context) 
+10. LLMService → RAGQueryComponent: natural language response 
+11. RAGQueryComponent → Mobile App: formatted response with citations 
+12. Mobile App → Client: Display conversational answer 
+25 
+2025/26 
+Addis Local Service Finder     
+Scenario 3: RAG system falling back to external web search when internal results are 
+insufficient. 
+Figure 10: Sequence Diagram - External Data Retrieval 
+Requirement Reference: - SRS FR-04 (Functional Requirement) 
+● US-03 Alternative Course AC1 (User Story) 
+Participating Actors 
+● RAGQueryComponent: The primary fallback trigger based on confidence scoring. 
+● ExternalDataService: Orchestrator for the external retrieval pipeline. 
+● Web Scraper: Handles external HTTP requests and rate limiting. 
+● Data Parser: Converts raw HTML/JSON into structured provider formats. 
+● Staging Database: Temporary storage for unverified external data. 
+● Admin Portal: Interface for human-in-the-loop verification. 
+● Quality Validator: Internal service to score data quality before staging. 
+The automated fallback pipeline enriches system data when the RAG system's confidence in 
+26 
+2025/26 
+Addis Local Service Finder     
+internal results falls below a predefined threshold. This is an on-demand process triggered by 
+user queries rather than a scheduled batch job. 
+Message Sequence 
+Phase 1: Fallback Triggering 
+● RAGQueryComponent evaluates internal results. 
+● If Confidence < Threshold, RAGQueryComponent calls triggerExternalSearch(query, location) on 
+the ExternalDataService. 
+Phase 2: External Data Retrieval & Parsing 
+● ExternalDataService sends scrapeWebSources(searchQuery) to the Web Scraper. 
+● Web Scraper executes HTTP requests to External Websites (respecting rate limits). 
+● External Websites return HTML/JSON responses to the Web Scraper. 
+● Web Scraper passes raw data to the Data Parser. 
+● Data Parser returns structured provider data to the ExternalDataService. 
+● ExternalDataService calls validateDataQuality(data) on the Quality Validator. 
+● Quality Validator returns a quality score and validation result. 
+Phase 3: Data Staging 
+● ExternalDataService calls insertStagedData(data) into the Staging Database. 
+● Staging Database returns a stagingId. 
+● ExternalDataService sends notifyNewStaging(stagingId) to the Admin Portal. 
+Phase 4: Admin Notification 
+● Admin Portal displays the notification to the Administrator via the verification queue. 
+Architectural Design Decisions 
+● Conditional Execution: The flow is strictly gated by the RAG system's confidence 
+evaluation (linked to Figure 12 State Chart). 
+● Verification First: External data is routed to a staging database and admin queue rather than 
+direct production injection, ensuring the system prioritizes verified information. 
+Scenario 4: Administrator reviewing and verifying staged service provider data 
+Actors: Administrator, Admin Portal, Verification Service, Staging Database, Main Database 
+Description: Manual verification workflow for external data. 
+27 
+ 
+Addis Local Service Finder     2025/26 
+ 
+ 
+Figure 11: Sequence Diagram - Admin Verification Process 
+28 
+2025/26 
+Addis Local Service Finder     
+Objects and Messages: 
+1. Administrator → Admin Portal: requestPendingVerifications() 
+2. Admin Portal → Verification Service: getStagedItems(limit, priority) 
+3. Verification Service → Staging Database: selectPendingItems() 
+4. Staging Database → Verification Service: list of staged items 
+5. Verification Service → Admin Portal: formatted verification queue 
+6. Admin Portal : Administrator: display verification interface 
+7. Administrator :- Admin Portal: reviewItem(stagingId), approve/reject decision 
+8. Admin Portal :- Verification Service: processVerification(stagingId, decision, adminId) 
+9. If approved: 
+● Verification Service :- Staging Database: getStagedData(stagingId) 
+● Staging Database :- Verification Service: complete provider data 
+● Verification Service :- Main Database: insertVerifiedProvider(data) 
+● Main Database :- Verification Service: success confirmation 
+● Verification Service :- Staging Database: updateStatus(stagingId, "APPROVED") 
+10. If rejected: 
+● Verification Service :- Staging Database: updateStatus(stagingId, "REJECTED", 
+reason) 
+11. Verification Service :- Audit Logger: logVerificationAction(adminId, stagingId, action) 
+12. Verification Service :- Admin Portal: verification result 
+13. Admin Portal :- Administrator: confirmation message 
+29 
+2025/26 
+Addis Local Service Finder     
+3.3 State Chart Diagram 
+RAGQueryComponent 
+Description: Represents the various states of the RAG query processing system during a 
+conversational search interaction. 
+Figure 12: RAG System State Chart Diagram 
+States and Transitions 
+Initial State: IDLE 
+● Description: System ready to receive queries 
+● Entry Action: Initialize components, load models 
+● Exit Action: Clean temporary data 
+Transition: IDLE → RECEIVING_QUERY 
+● Trigger: User submits query via mobile app 
+● Condition: Query is valid non-empty string 
+● Action: Parse query, detect language 
+State: RECEIVING_QUERY 
+● Description: Processing user input 
+30 
+2025/26 
+Addis Local Service Finder     
+● Do Activity: Tokenize query, extract entities 
+Transition: RECEIVING_QUERY → RETRIEVING_CONTEXT 
+● Trigger: Query parsing complete 
+● Condition: Intent identified successfully 
+● Action: Generate query embedding 
+State: RETRIEVING_CONTEXT 
+● Description: Searching vector database for relevant information 
+● Do Activity: Similarity search, result ranking 
+Transition: RETRIEVING_CONTEXT → EVALUATING_CONFIDENCE 
+● Trigger: Context retrieval complete 
+● Condition: Results found in vector DB 
+● Action: Calculate confidence score 
+State: EVALUATING_CONFIDENCE 
+● Description: Assessing quality of retrieved information 
+● Do Activity: Score calculation, threshold comparison 
+Decision Point: Confidence Threshold Check 
+● If 
+confidence 
+≥ 
+GENERATING_RESPONSE 
+● If 
+confidence 
+< 
+SEARCHING_EXTERNAL 
+State: GENERATING_RESPONSE 
+threshold: 
+threshold: 
+EVALUATING_CONFIDENCE 
+EVALUATING_CONFIDENCE 
+● Description: LLM generating natural language answer 
+● Do Activity: Context augmentation, response generation 
+● Transition to: FORMATTING_RESPONSE (automatic when generation complete) 
+State: SEARCHING_EXTERNAL 
+● Description: Fallback to external web sources 
+● Do Activity: Web scraping, API calls 
+● Transition to: STAGING_EXTERNAL_DATA (when external data retrieved) 
+State: STAGING_EXTERNAL_DATA 
+● Description: Preparing external data for verification 
+→ 
+→ 
+31 
+2025/26 
+Addis Local Service Finder     
+● Do Activity: Data parsing, quality assessment 
+● Transition to: GENERATING_RESPONSE (with fallback context) 
+State: FORMATTING_RESPONSE 
+● Description: Finalizing response for user 
+● Do Activity: Citation generation, response formatting 
+● Transition to: DELIVERING_RESPONSE (when formatting complete) 
+State: DELIVERING_RESPONSE 
+● Description: Sending response to user 
+● Do Activity: Log interaction, update analytics 
+● Transition to: IDLE (after delivery complete) 
+State: ERROR_HANDLING 
+● Description: Exception state for error recovery 
+● Entry Action: Log error details, notify monitoring 
+● Transitions from: Any state when exception occurs 
+● Transition to: IDLE (after error handling) or specific recovery state 
+Final State: COMPLETED 
+● Description: Query processing successfully finished 
+● Entry Action: Cleanup resources, update metrics 
+Parallel States (during GENERATING_RESPONSE): 
+1. Response Generation: LLM processing 
+2. Citation Management: Source attribution 
+3. Quality Assurance: Response validation 
+Composite State: EXTERNAL_DATA_FLOW 
+● Contains: SEARCHING_EXTERNAL, STAGING_EXTERNAL_DATA 
+● History State: Remembers position if interrupted 
+Guard Conditions: 
+● [language == "English"] - Triggers english-specific processing 
+● [queryLength > 100] - Triggers query simplification 
+● [timeout == true] - Triggers fallback to cached results 
+Time Events: 
+32 
+2025/26 
+Addis Local Service Finder     
+● after(5s) - Triggers timeout from RETRIEVING_CONTEXT state 
+● after(10s) - Triggers timeout from GENERATING_RESPONSE state 
+33 
+ 
+Addis Local Service Finder     2025/26 
+ 
+4. Detailed Design 
+This section provides detailed specifications for the key system component. Each component is 
+described using three tables: class overview, attributes description, and operations description. 
+4.1 User Domain Components 
+Class 
+Name 
+Layer Responsibility Inheritance Associations 
+UserDat
+aModel 
+Domai
+n 
+Layer 
+Represents a system 
+user (client or 
+provider) with auth 
+and basic functionality 
+Extends: None 
+Extended by: 
+ServiceProvider
+DataModel 
+1.ServiceProviderDataModel (1:1) 
+2.SearchQuery (1:Many) 
+3.ProviderReference (1:Many) 
+4. Location (1:1) 
+Table 3: UserDataModel Class 
+Attributes description for UserDataModel Class 
+Attribute Type Visibility Invariant 
+userId String private Must be a valid UUID format matching 
+backend records 
+email String private Valid email format, unique across system 
+phoneNumber String private Ethiopian format (+251XXXXXXXXX or 
+09XXXXXXXX) 
+currentLocation Location private Must have valid latitude/longitude within 
+Addis Ababa bounds 
+searchHistory List<SearchQuery> private Maximum 50 recent searches, sorted by 
+recency 
+savedProviders List<ProviderReferenc
+e> 
+private Unique provider IDs, no duplicates 
+notificationPrefs Map<String, bool> private Keys: "new_services", "promotions", "updates" 
+isLocationEnabled bool private Reflects actual GPS permission status on 
+device 
+34 
+ 
+Addis Local Service Finder     2025/26 
+ 
+createdAt DateTime private Auto-generated timestamp 
+Table 3.1: Attributes description for UserDataModel Class 
+Operation description for UserDataModel Class 
+Operation Visibility Return Type Arguments Pre-condition Post-conditio
+n 
+authenticat
+e() 
+public boolean credentials: 
+Map<String, 
+String> 
+Valid 
+credentials 
+format 
+Returns 
+authentication 
+status 
+updateProfi
+le() 
+public boolean profileData: 
+Map<String, 
+dyn> 
+User 
+authenticated 
+Updates 
+profile, 
+returns 
+success status 
+searchServi
+ces() 
+public List<Service> query: String, 
+filters: 
+Map<String, 
+dyn> 
+User 
+authenticated, 
+location 
+available 
+Returns sorted 
+list of 
+matching 
+services 
+viewProvid
+erProfile() 
+public Provider providerId: 
+String 
+Provider 
+exists and is 
+verified 
+Displays 
+complete 
+provider 
+information 
+saveSearch(
+) 
+public void query: 
+SearchQuery 
+Valid search 
+parameters 
+Adds to 
+searchHistory, 
+persists 
+locally 
+contactProv
+ider() 
+public ContactResult providerId: 
+String, 
+message: 
+String 
+Provider 
+contact info 
+available 
+Sends 
+message, logs 
+interaction 
+updateLoca
+tion() 
+public void location: 
+Location 
+GPS 
+permission 
+granted 
+Updates 
+currentLocatio
+n, refreshes 
+nearby 
+35 
+ 
+Addis Local Service Finder     2025/26 
+ 
+toggleNotifi
+cation() 
+public void type: String, 
+enabled: bool 
+Valid 
+notification 
+type 
+Updates 
+preferences, 
+syncs with 
+backend 
+Table 3.2: Operation description for UserDataModel Class 
+ 
+ServiceProviderDataModel Class 
+Class 
+Name 
+Layer Responsibility Inheritance Associations 
+Service
+Provide
+rDataM
+odel 
+Domain 
+Layer 
+Extends UserDataModel with 
+provider attributes and 
+business management 
+Extends: 
+UserDataModel 
+Extended by:None 
+1. UserDataModel (parent) 
+2. Service (1:Many) 
+3. Document (1:Many) 
+4. ProviderAnalytics (1:1) 
+Table 4: ServiceProviderDataModel Class 
+Attributes description for ServiceProviderDataModel Class 
+Attribute Type Visibility Invariant 
+providerId String private Must match authenticated user's provider ID 
+businessName String private 2-100 characters, unique across system 
+services List<Service> private Each service must have unique name within 
+provider 
+availability AvailabilityStatu
+s 
+private Must be one of: AVAILABLE, BUSY, AWAY, 
+OFFLINE 
+verificationStatus VerificationStatu
+s 
+private Must be one of: PENDING, VERIFIED, 
+REJECTED, SUSPENDED 
+documents List<Document> private Maximum 5 documents, each $\le$ 10MB, 
+specific formats (PDF, JPG, PNG) 
+rating double private $0.0 - 5.0$, calculated from all reviews 
+totalBookings int private $\ge 0$, increments with confirmed bookings 
+36 
+ 
+Addis Local Service Finder     2025/26 
+ 
+responseRate double private $0.0 - 100.0$, percentage of inquiries responded 
+to 
+Table 4.1: Attributes description for ServiceProviderDataModel Class 
+ 
+Operation description for ServiceProviderDataModel Class 
+ 
+Operation Visibilit
+y 
+Return 
+Type 
+Arguments Pre-condition Post-condition 
+addService() public Service serviceData: 
+Map<String, 
+dyn> 
+User 
+authenticated 
+as provider 
+Creates new 
+service, adds to 
+services list 
+removeServic
+e() 
+public boolean serviceId: String Service exists 
+and belongs to 
+provider 
+Removes service, 
+returns success 
+status 
+updateAvaila
+bility() 
+public void status: 
+AvailabilityStatus 
+Valid status 
+value 
+Updates 
+availability status 
+uploadDocu
+ment() 
+public Documen
+t 
+file: File, 
+docType: String 
+File size $\le$ 
+10MB, valid 
+format 
+Uploads 
+document, 
+updates 
+documents list 
+getAnalytics(
+) 
+public Provider
+Analytics 
+timeframe: String User 
+authenticated 
+as provider 
+Returns 
+performance 
+metrics for period 
+respondToIn
+quiry() 
+public boolean inquiryId: String, 
+response: String 
+Inquiry exists 
+and is pending 
+Sends response, 
+updates response 
+rate 
+updateRating
+() 
+private void newRating: 
+double 
+Rating 
+between $0.0$ 
+and $5.0$ 
+Recalculates 
+average rating 
+Table 4.2: Operation description for ServiceProviderDataModel Class 
+ 
+ 
+37 
+ 
+Addis Local Service Finder     2025/26 
+ 
+4.2 Service Domain Components 
+ 
+ServiceDataModel Class 
+Class Name Layer Responsibility Inheritance Associations 
+ServiceDataMo
+del 
+Domai
+n Layer 
+Represents a specific 
+service with pricing, 
+availability, and 
+categorization 
+Extends: 
+None 
+Extended 
+by: None 
+1. ServiceProvider (Many:1) 
+2. AvailabilitySchedule (1:1) 
+3. Booking (1:Many) 
+4. Range (1:1) 
+Table 5: ServiceDataModel Class 
+ 
+Attributes description for ServiceDataModel Class 
+Attribute Type Visibility Invariant 
+serviceId String private UUID format, unique 
+name String private 3-100 characters, descriptive 
+description String private 10-500 characters 
+category String private Must be from predefined list 
+priceRange Range private min ≥ 0, max ≥ min 
+duration Duration private 15min increments, 15min-8hrs 
+providerId String private Must reference valid provider 
+isActive boolean private Default: true 
+tags List<String> private Maximum 10 tags, each ≤ 20 characters 
+Table 5.1: Attributes description for ServiceDataModel Class 
+ 
+ 
+ 
+ 
+ 
+ 
+38 
+ 
+Addis Local Service Finder     2025/26 
+ 
+ 
+ 
+Operation description for ServiceDataModel Class 
+ 
+Operation Visibility Return 
+Type 
+Arguments Pre-condition Post-condition 
+updateDet
+ails() 
+public boolean details: Map User is provider Updates service 
+info 
+setAvailabi
+lity() 
+public void schedule: 
+AvailabilitySchedu
+le 
+Valid time slots Updates 
+booking 
+calendar 
+isAvailable
+() 
+public boolean datetime: 
+DateTime 
+— Returns 
+availability 
+status 
+calculatePr
+ice() 
+public double duration: int, 
+extras: List 
+Duration valid Returns total 
+price 
+toggleActiv
+e() 
+public void — Service exists Toggles 
+isActive status 
+addTag() public boolean tag: String Tag valid, < 10 
+tags 
+Adds tag, 
+returns success 
+Table 5.2: Operation description for ServiceDataModel Class 
+4.3 RAG System Components 
+RAGQueryComponent Class 
+Class 
+Name 
+Layer Responsibility Inheritance Associations 
+RAGQue
+ryCompo
+nent 
+Presentati
+on 
+(Mobile) 
+Handles RAG chatbot 
+interface and 
+conversational AI 
+pipeline 
+Extends: 
+None 
+Extended by: 
+None 
+1.VectorRetriever (1:1) 
+2. LLMService (1:1) 
+3.QueryParser (1:1) 
+4.ExternalDataService (1:1) 
+Table 6: RAGQueryComponent Class 
+ 
+39 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Attributes description for RAGQueryComponent Class 
+Attribute Type Visibility Invariant 
+vectorRetriever VectorRetriever private Initialized with valid vector database 
+connection 
+llmService LLMService private Configured with appropriate model and 
+parameters 
+queryParser QueryParser private Capable of parsing English and Amharic 
+queries 
+externalRetrieve
+r 
+ExternalDataServi
+ce 
+private Configured with API keys and rate limits 
+confidenceThres
+hold 
+float private 0.0-1.0, determines when to trigger 
+external search 
+maxResults int private 1-50, maximum number of results to 
+return 
+conversationHist
+ory 
+List<Conversation
+Turn> 
+private Maximum 20 turns, encrypted storage 
+Table 6.1:Attributes description for RAGQueryComponent Class 
+ 
+RAGResponse Class 
+The RAGResponse class encapsulates the complete output from the RAG (Retrieval-Augmented 
+Generation) system, including metadata about the data sources used for the response generation. 
+Class Definition 
+Property Details 
+Class Name RAGResponse 
+Layer Presentation / Business Logic 
+Responsibility Encapsulates AI-generated response with source metadata 
+Inheritance None 
+40 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Associations 1. Source citations (1:Many) 
+Table 7 : RAGResponse Class Definition 
+Attributes 
+Attribute Type Visibility Invariant 
+answer String public Non-empty string containing the 
+natural language response 
+sources List<SourceCitation> public List of provider profiles or 
+external sources cited 
+dataSource DataSourceType public Must be one of: 
+VERIFIED_DATABASE, 
+EXTERNAL_PENDING 
+confidenceScore float public 0.0 - 1.0, indicates system 
+confidence in the answer 
+suggestedActions List<ActionButton> public Optional quick-action buttons 
+(e.g., "View Profile") 
+Table 8 : RAGResponse Class Attributes 
+ 
+Operation Description 
+Operation Visibilit
+y 
+Return 
+Type 
+Argu
+ments 
+Pre-co
+ndition 
+Post-condition 
+getFormatted
+Response() 
+public String - Respon
+se 
+generat
+ed 
+Returns answer with 
+source annotations 
+getSourceCit
+ations() 
+public List<String> - Source
+s 
+availab
+le 
+Returns formatted 
+citations for display 
+hasVerifiedS public boolean - - Returns true if 
+41 
+ 
+Addis Local Service Finder     2025/26 
+ 
+ources() dataSource is 
+VERIFIED_DATAB
+ASE 
+Table 9: Operation description for RAGQueryComponent Class 
+ 
+  
+RAGEmbeddingModel Class 
+ 
+Operation Visibility Return 
+Type 
+Arguments Pre-conditio
+n 
+Post-condition 
+processQuer
+y() 
+public RAGRes
+ponse 
+query: String, 
+userId: String 
+Valid query 
+string, user 
+authenticated 
+Returns 
+conversational 
+response with 
+datasource 
+metadata 
+retrieveCont
+ext() 
+private List<Co
+ntext> 
+query: String, 
+topK: int 
+Query parsed 
+successfully 
+Returns 
+relevant context 
+chunks 
+generateRes
+ponse() 
+private String query: String, 
+contexts: 
+List<Context> 
+Contexts 
+retrieved 
+successfully 
+Returns natural 
+language 
+response 
+triggerExter
+nalSearch() 
+private List<Ext
+ernalDat
+a> 
+query: String, 
+intent: Intent 
+Internal 
+results 
+insufficient 
+Returns 
+external data 
+for staging 
+evaluateCon
+fidence() 
+private float results: 
+List<Result> 
+Results 
+retrieved 
+from vector 
+DB 
+Returns 
+confidence 
+score 0.0-1.0 
+logInteractio
+n() 
+public void query: String, 
+response: 
+RAGResponse 
+Query 
+processed 
+successfully 
+Logs to 
+database for 
+analytics 
+clearHistory public void — User Clears 
+42 
+ 
+Addis Local Service Finder     2025/26 
+ 
+() authenticated conversation 
+history 
+ 
+Table 10: RAGEmbeddingModel Class 
+ 
+API Specification  
+ 
+Class Name Layer Responsibility Inheritance Associations 
+API 
+Specification 
+Table 
+5.1 Documents REST API 
+endpoints, methods, 
+and auth 
+Tabular 
+spec 
+15+ endpoints: Auth, 
+Discovery, 
+Management, Bookings 
+Table 11 : API Specification  
+ 
+Attributes description 
+ 
+Attribute Type Visibility Invariant 
+modelName String private Pre-trained model identifier 
+vectorSize int private 384, 512, or 768 dimensions 
+languageSupport List<String> private eng 
+cacheSize int private 1000-10000 embeddings 
+cache Map<String, 
+List<float>> 
+private LRU cache implementation 
+isInitialized boolean private Must be true before use 
+Table 11.1: Attributes description for RAGEmbeddingModel Class 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+43 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Operation description 
+Operation Visibility Return 
+Type 
+Arguments Pre-condi
+tion 
+Post-condition 
+embedText() public List<float> text: String, lang: 
+String 
+Text not 
+empty 
+Returns 
+embedding 
+vector 
+batchEmbed() public List<List<flo
+at>> 
+texts: 
+List<String> 
+List not 
+empty 
+Returns batch 
+embeddings 
+calculateSim
+ilarity() 
+public float vec1: List<float>, 
+vec2: List<float> 
+Vectors 
+same size 
+Returns cosine 
+similarity 
+normalizeVe
+ctor() 
+private List<float> vector: 
+List<float> 
+Vector not 
+empty 
+Returns 
+normalized 
+vector 
+clearCache() public void — Model 
+initialized 
+Clears 
+embedding 
+cache 
+getModelInf
+o() 
+public ModelInfo — Model 
+initialized 
+Returns model 
+metadata 
+Table 11.2: Operation description for RAGEmbeddingModel Class 
+4.4 External Data Components 
+ 
+Class Name Layer Responsibility Inheritance Associations 
+ExternalDataRetr
+ievalComponent 
+Business 
+Logic 
+Retrieves public 
+service info from 
+external web 
+sources 
+Extends: None 
+ 
+Extended by: 
+None 
+1. SearchAPI (1:Many) 
+2. WebScraper (1:1) 
+3. DataParser (1:1) 
+4. StagingManager (1:1) 
+Table 12: ExternalDataRetrievalComponent Class 
+ 
+ 
+ 
+ 
+44 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Attribute Type Visibility Invariant 
+searchAPIs List<SearchAPI> private At least one valid search API configured 
+webScraper WebScraper private Configured with politeness delays and user 
+agent 
+dataParser DataParser private Can parse various website structures 
+rateLimiter RateLimiter private Prevents API rate limit violations 
+allowedDomains List<String> private Whitelist of trusted domains for scraping 
+stagingManager StagingManager private Connected to staging database 
+qualityThreshold float private 0.0-1.0, minimum quality score for staging 
+ 
+Table 12.1: Attributes description for ExternalDataRetrievalComponent Class 
+ 
+ 
+Operation Visibility Return Type Arguments Pre-condition Post-condition 
+searchWeb(
+) 
+public List<RawData> query: 
+String, 
+source: 
+String 
+Valid query, 
+source in 
+allowedDoma
+ins 
+Returns raw 
+web data 
+parseProvi
+derData() 
+public ProviderData rawData: 
+RawData, 
+sourceUrl: 
+String 
+Raw data 
+contains 
+provider info 
+Returns 
+structured 
+provider data 
+validateDat
+a() 
+private boolean data: 
+ProviderDat
+a 
+Data parsed 
+successfully 
+Returns true if 
+data meets 
+quality criteria 
+checkDupli
+cates() 
+private List<String> data: 
+ProviderDat
+a 
+Data validated 
+successfully 
+Returns list of 
+potential 
+duplicate IDs 
+stageForVe
+rification() 
+public String data: 
+ProviderDat
+Data is new 
+and validated 
+Returns staging 
+ID, adds to 
+45 
+ 
+Addis Local Service Finder     2025/26 
+ 
+a, source: 
+String 
+admin queue 
+notifyAdmi
+n() 
+public void stagingId: 
+String, 
+priority: int 
+Data staged 
+successfully 
+Sends 
+notification to 
+admin portal 
+calculateQ
+uality() 
+private float data: 
+ProviderDat
+a 
+Data parsed Returns quality 
+score 0.0-1.0 
+Table 12.2: Operation description for ExternalDataRetrievalComponent Class 
+ 
+Class Name Layer Responsibility Inheritance Associations 
+RAGEmbed
+dingModel 
+Busines
+s Logic 
+Handles text 
+embedding generation 
+and similarity 
+calculations 
+Extends: 
+None 
+Extended by: 
+None 
+1. Model config (1:1) 
+2. Cache (1:1) 
+3. Embedding vector 
+(1:Many) 
+4. ModelInfo (1:1) 
+Table 13 : VerificationStagingDataModel Class 
+ 
+Attribute Type Visibility Invariant 
+stagingId String private UUID format 
+sourceData ProviderData private Parsed structured data 
+sourceUrl String private Valid URL format 
+status StagingStatus private PENDING/UNDER_REVIEW/APPROVED/REJE
+CTED 
+qualityScore float private 0.0-1.0, calculated 
+createdAt DateTime private Auto-generated timestamp 
+reviewedBy String private Admin ID if reviewed, null otherwise 
+reviewNotes String private Maximum 500 characters 
+Table 13.1: Attributes description for VerificationStagingDataModel Class 
+ 
+46 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Operation Visibility Return Type Arguments Pre-condition Post-condition 
+validate() public boolean - Data parsed Returns validation 
+result 
+checkDupli
+cates() 
+public List<String> - Data valid Returns duplicate 
+IDs 
+stageForVe
+rification() 
+public String - Validation 
+passed 
+Returns staging ID 
+updateStat
+us() 
+public void status: 
+StagingStat
+us, reason: 
+String 
+Admin 
+authenticated 
+Updates status 
+getReview
+History() 
+public List<Review
+Log> - Status not 
+PENDING 
+Returns review 
+timeline 
+calculateQ
+uality() 
+private float - Data parsed Returns quality 
+score 
+Table 13.2: Operation description for VerificationStagingDataModel Class 
+4.5 Admin Components 
+Class Name Layer Responsibility Inheritance Associations 
+AdminVerificat
+ionComponent 
+Presentatio
+n (Admin) 
+Interface for admins to 
+review and verify 
+staged external data 
+Extends: 
+None 
+Extended by: 
+None 
+1. StagingRepository 
+(1:1) 
+2. ProviderRepository 
+(1:1) 
+3. NotificationService 
+(1:1) 
+4. AuditLogger (1:1) 
+Table 14: AdminVerificationComponent Class 
+ 
+ 
+ 
+ 
+47 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Attribute Type Visibility Invariant 
+stagingRepository StagingRepository private Connected to staging database 
+providerRepository ProviderRepository private Connected to main database 
+notificationService NotificationService private Can send email and in-app 
+notifications 
+auditLogger AuditLogger private Logs all verification actions 
+approvalThreshold int private Minimum criteria for automatic 
+approval (future enhancement) 
+reviewQueue Queue private FIFO queue for pending reviews 
+batchSize int private 1-50, items to process in batch 
+operations 
+ 
+Table 14.1: Attributes description for AdminVerificationComponent Class 
+ 
+Operation Visibility Return 
+Type 
+Arguments Pre-condition Post-condition 
+getPending
+Reviews() 
+public List<Stag
+ingItem> 
+limit: int, priority: 
+boolean 
+Admin 
+authenticated 
+Returns list of 
+pending items 
+approveStag
+edData() 
+public boolean stagingId: String, 
+adminId: String 
+Admin has 
+verification 
+permissions 
+Moves data to 
+main DB, 
+updates status 
+rejectStaged
+Data() 
+public boolean stagingId: String, 
+reason: String 
+Admin has 
+verification 
+permissions 
+Deletes from 
+staging, logs 
+reason 
+editAndApp
+rove() 
+public boolean stagingId: String, 
+edits: Map, 
+adminId: String 
+Valid edits 
+provided 
+Updates data, 
+then approves 
+bulkApprov
+e() 
+public int stagingIds: 
+List<String>, 
+adminId: String 
+Admin has bulk 
+operation 
+permissions 
+Processes 
+multiple 
+approvals, 
+48 
+ 
+Addis Local Service Finder     2025/26 
+ 
+returns count 
+getVerificati
+onStats() 
+public Verificat
+ionStats 
+timeframe: String, 
+adminId: String 
+Admin 
+authenticated 
+Returns statistics 
+for reporting 
+exportVerifi
+cationLog() 
+public String startDate: 
+DateTime, endDate: 
+DateTime 
+Admin 
+authenticated 
+Returns CSV 
+export of 
+verification log 
+Table 14.2: Operation description for AdminVerificationComponent Class 
+4.6 Service Components 
+ 
+Class Name Layer Responsibility Inheritance Associations 
+LocationService Application Handles geolocation, 
+distance calculations, 
+and geocoding 
+Extends: 
+None 
+Extended 
+by: None 
+1. MapProvider (1:1) 
+2. Geocoder (1:1) 
+3. DistanceCalculator (1:1) 
+4. Cache (1:1) 
+Table 15: LocationService Class 
+ 
+Attribute Type Visibility Invariant 
+mapProvider MapProvider private Configured mapping service (Google Maps/Mapbox) 
+geocoder Geocoder private Converts addresses to coordinates 
+distanceCalculator DistanceCalcu
+lator 
+private Implements Haversine formula for distance 
+calculation 
+cache Cache private Caches geocoding results 
+maxRadius double private Maximum search radius in kilometers (default: 50km) 
+adisAbabaBounds Polygon private Geographical boundaries of Addis Ababa 
+Table 15.1: Attributes description for LocationService Class 
+ 
+ 
+49 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Operation Visibility Return 
+Type 
+Arguments Pre-condition Post-condition 
+geocodeAd
+dress() 
+public Location address: String Valid 
+non-empty 
+address 
+Returns coordinates 
+for address 
+reverseGeo
+code() 
+public String location: 
+Location 
+Valid 
+coordinates 
+Returns address for 
+coordinates 
+calculateDi
+stance() 
+public double loc1: Location, 
+loc2: Location 
+Both locations 
+valid 
+Returns distance in 
+kilometers 
+findNearby
+() 
+public List<Loc
+ation> 
+center: 
+Location, 
+radius: double, 
+type: String 
+Center location 
+valid, radius ≤ 
+maxRadius 
+Returns locations 
+within radius 
+validateLo
+cation() 
+public boolean location: 
+Location 
+Coordinates 
+provided 
+Returns true if 
+within Addis 
+Ababa bounds 
+getRoute() public Route start: Location, 
+end: Location, 
+mode: String 
+Both locations 
+valid 
+Returns route with 
+distance and time 
+isWithinCit
+y() 
+public boolean location: 
+Location 
+Valid 
+coordinates 
+Returns true if 
+within Addis 
+Ababa 
+Table 15.2: Operation description for LocationService Class 
+ 
+4.7 System Specifications 
+Endpoint 
+Group 
+Endpoint Method Path Description Auth 
+Required 
+Rate 
+Limit 
+Authentica
+tion 
+Register POST /api/v1/aut
+h/register 
+User registration with 
+role selection (SRS 
+FR-01) 
+No 10/min 
+Authentica
+tion 
+Login POST /api/v1/aut
+h/login 
+User authentication 
+(SRS FR-02) 
+No 10/min 
+50 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Authentica
+tion 
+Refresh POST /api/v1/aut
+h/refresh 
+Refresh JWT token Yes 20/min 
+Client 
+Services 
+Browse & 
+Filter 
+GET /api/v1/ser
+vices 
+Traditional browsing 
+with filters (SRS 
+FR-03) 
+Optional* 60/min 
+Client 
+Services 
+Get 
+Provider 
+GET /api/v1/pro
+viders/{pro
+viderId} 
+View provider details 
+(SRS US-05) 
+No 30/min 
+Client 
+Services 
+Save 
+Provider 
+POST /api/v1/clie
+nts/saved-p
+roviders 
+Bookmark a provider 
+(SRS 2.3) 
+Yes 20/min 
+Client 
+Services 
+Create 
+Inquiry 
+POST /api/v1/inq
+uiries 
+Contact a provider 
+(SRS US-05) 
+Yes 10/min 
+RAG 
+Services 
+RAG 
+Query 
+POST /api/v1/rag/
+query 
+Conversational AI 
+search (SRS FR-04) 
+Yes 30/min 
+Provider 
+Mgmt 
+Provider 
+Register 
+POST /api/v1/pro
+viders/regi
+ster 
+Complete provider 
+profile with 
+documents (SRS 
+US-02) 
+Yes 5/min 
+Provider 
+Mgmt 
+Update 
+Profile 
+PUT /api/v1/pro
+viders/{pro
+viderId}/pr
+ofile 
+Update provider info 
+(SRS FR-05) 
+Yes 20/min 
+Provider 
+Mgmt 
+My 
+Inquiries 
+GET /api/v1/pro
+viders/{pro
+viderId}/in
+quiries 
+Get received contact 
+requests 
+Yes 30/min 
+Review 
+System 
+Submit 
+Review 
+POST /api/v1/revi
+ews 
+Submit 
+rating/comment (SRS 
+FR-08) 
+Yes 10/min 
+Review 
+System 
+Get 
+Reviews 
+GET /api/v1/pro
+viders/{pro
+viderId}/re
+views 
+Get provider reviews No 30/min 
+Admin - 
+Core 
+Mgmt 
+Get All 
+Providers 
+GET /api/v1/ad
+min/provid
+ers 
+List all providers for 
+management (SRS 
+US-09) 
+Admin 100/min 
+Admin - 
+Core 
+Update 
+Provider 
+PUT /api/v1/ad
+min/provid
+Admin edit of 
+provider data (SRS 
+Admin 100/min 
+51 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Mgmt ers/{provid
+erId} 
+US-09) 
+Admin - 
+Core 
+Mgmt 
+Dashboar
+d 
+GET /api/v1/ad
+min/dashb
+oard 
+System analytics 
+(SRS FR-10) 
+Admin 60/min 
+Admin - 
+Core 
+Mgmt 
+Flagged 
+Reviews 
+GET /api/v1/ad
+min/flagge
+d-reviews 
+Get reviews needing 
+moderation (SRS 
+FR-08) 
+Admin 60/min 
+Admin - 
+External 
+Data 
+Verificati
+on Queue 
+GET /api/v1/ad
+min/verific
+ation-queu
+e 
+Pending external data 
+(SRS FR-07) 
+Admin 100/min 
+Admin - 
+External 
+Data 
+Approve 
+Data 
+POST /api/v1/ad
+min/staged-data/{stagi
+ngId}/appr
+ove 
+Approve staged data 
+(SRS US-08) 
+Admin 100/min 
+Table 16: API Specification Table 
+ 
+Additional Specifications 
+ 
+Base URL: https://api.addislocalservicefinder.et/v1 
+Content-Type: application/json for all requests/responses 
+Authentication: JWT Bearer token in Authorization header 
+Error Format: Standardized JSON error responses 
+Versioning: URL path versioning (/v1/) 
+CORS: Enabled for mobile app domains and admin portal 
+Note: Browsing without authentication shows limited results; authenticated users get personalized results. 
+Note: Requires initial user account created via /auth/register with provider role. 
+Security Configuration 
+Security 
+Aspect 
+Configuratio
+n 
+Implementation Details Complian
+ce 
+Standard 
+Authenticat
+ion 
+JWT Tokens Access token: 15min; Refresh token: 7 days; 
+HTTP-only Secure cookies; Device fingerprinting; 
+Token blacklisting 
+OAuth 
+2.0, RFC 
+7519 
+Password 
+Policy 
+Complexity 
+Rules 
+Min 8 chars; 1 uppercase, 1 number, 1 special; 
+BCrypt hashing (cost: 12); History: 5 previous 
+NIST 
+800-63B 
+52 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Encryption 
+at Rest 
+Database 
+Encryption 
+AES-256; TDE for PostgreSQL; Key rotation every 
+90 days; Encrypted backups; Field-level PII 
+encryption 
+PCI DSS, 
+GDPR 
+Encryption 
+in Transit 
+TLS 
+Configuration 
+TLS 1.3 preferred (1.2 min); HSTS (1 year); 
+Certificate pinning; Monthly SSL rotation 
+HTTPS 
+Everywhe
+re 
+API 
+Security 
+Rate Limiting Tiered limits by role; IP throttling; Burst 20%; 
+SQLi prevention via ORM; XSS sanitization 
+OWASP 
+API Top 
+10 
+Data 
+Protection 
+PII Handling Field-level encryption; EU GDPR compliance; 
+Retention: 5 years; Right to erasure; Data 
+minimization 
+GDPR, 
+CCPA 
+Audit 
+Logging 
+Comprehensi
+ve Logs 
+Auth attempts, data mods, admin actions; 365-day 
+retention; Immutable storage; Regular analysis 
+SOC 2, 
+ISO 
+27001 
+Session 
+Mgmt 
+Session 
+Security 
+Secure flag; SameSite=Strict; CSRF tokens; 30 min 
+inactivity timeout; Concurrent session control 
+OWASP 
+Session 
+Mgmt 
+External 
+API Sec 
+API Key 
+Mgmt 
+Encrypted keys; 90-day rotation; Usage quotas; 
+Revocation capability; Usage audit trail - 
+Web 
+Scraping 
+Sec 
+Controlled 
+Access 
+Whitelisted domains; 2-5s delays; User agent ID; 
+Rate limiting per domain; Robots.txt compliance - 
+Table 17: Security Configuration Table 
+ 
+Implementation Notes: 
+● Multi-factor authentication (future enhancement) 
+● Regular security penetration testing 
+● Automated vulnerability scanning 
+● Security headers (CSP, X-Frame-Options, etc.) 
+● Incident response plan with 1-hour RTO 
+ 
+ 
+ 
+53 
+ 
+Addis Local Service Finder     2025/26 
+ 
+Table 
+Name 
+Columns (Key Columns) Relationships Indexes Constraints 
+users user_id (PK), email, phone, 
+hashed_password, roles (JSON 
+array), created_at, last_login, 
+is_active 
+Parent of 
+client_profiles and 
+provider_profiles; 
+1:M with inquiries 
+email_idx 
+(unique), 
+phone_idx 
+(unique) 
+email NOT NULL 
+UNIQUE, phone 
+NOT NULL, roles 
+must contain valid 
+values 
+client_pr
+ofiles 
+client_profile_id (PK), user_id 
+(FK → users), saved_providers 
+(JSON array), search_history 
+(JSON), notification_prefs 
+(JSON), created_at 
+1:1 with users; 
+1:M with inquiries 
+user_id_idx 
+(unique) 
+user_id UNIQUE, 
+NOT NULL 
+service_
+provider
+_profiles 
+provider_profile_id (PK), 
+user_id (FK → users), 
+business_name, description, 
+tax_or_license_id, 
+service_categories (JSON 
+array), hourly_rate, address, 
+latitude, longitude, is_available, 
+verification_status, avg_rating, 
+verified_at, 
+verified_by_admin_id (FK → 
+users) 
+1:1 with users; 
+1:M with services; 
+1:M with inquiries 
+user_id_idx 
+(unique), 
+business_na
+me_idx, 
+verification_
+status_idx, 
+location_idx 
+(lat, long) 
+user_id UNIQUE, 
+NOT NULL, 
+verification_status IN 
+('pending', 'verified', 
+'rejected', 
+'suspended') 
+services service_id (PK), provider_id 
+(FK → 
+service_provider_profiles), 
+name, category, description, 
+price_min, price_max, duration, 
+is_active, created_at 
+M:1 with 
+service_provider_
+profiles; 1:M with 
+inquiries 
+Provider_id_
+idx,category
+_idx,price_r
+ange_idx 
+price_min ≥ 0, 
+price_max ≥ 
+price_min 
+service_i
+nquiries 
+inquiry_id (PK), client_id (FK 
+→ users), provider_id (FK → 
+users), service_id (FK → 
+services), message, status, 
+created_at, updated_at 
+M:1 with users 
+(client), M:1 with 
+users (provider), 
+M:1 with services; 
+1:1 with reviews 
+client_id_id
+x,provider_i
+d_idx,status
+_idx,created
+_at_idx 
+status IN ('pending', 
+'accepted', 'declined', 
+'completed') 
+reviews review_id (PK), inquiry_id (FK 
+→ service_inquiries), rating, 
+comment, created_at, 
+is_flagged, admin_notes 
+1:1 with 
+service_inquiries 
+inquiry_id_i
+dx (unique), 
+rating_idx, 
+created_at_i
+dx 
+rating BETWEEN 1 
+AND 5, inquiry_id 
+UNIQUE 
+54 
+ 
+Addis Local Service Finder     2025/26 
+ 
+provider
+_docume
+nts 
+doc_id (PK), provider_id (FK 
+→ service_provider_profiles), 
+document_type, file_url, 
+upload_date 
+M:1 with 
+service_provider_
+profiles 
+provider_id_
+idx,documen
+t_type_idx 
+document_type IN 
+('ID', 'LICENSE', 
+'CERTIFICATE', 
+'OTHER') 
+verificati
+on_stagi
+ng 
+staging_id (PK), retrieved_data 
+(JSON), source_url, status, 
+quality_score, created_at, 
+reviewed_by (FK → users), 
+review_notes, reviewed_at - status_idx, 
+created_at_i
+dx 
+status IN ('pending', 
+'under_review', 
+'approved', 'rejected', 
+'merged'), 
+quality_score 
+BETWEEN 0 AND 1 
+provider
+_embedd
+ing 
+embedding_id (PK), 
+provider_id (FK → 
+service_provider_profiles), 
+embedding_vector (vector), 
+last_updated 
+1:1 with 
+service_provider_
+profiles 
+provider_id_
+idx (unique) 
+provider_id 
+UNIQUE, vector size 
+matches model 
+audit_lo
+g 
+log_id (PK), admin_id (FK → 
+users), action_type, 
+target_entity_id, details 
+(JSON), timestamp 
+M:1 with users 
+(admin) 
+admin_id_id
+x,action_typ
+e_idx,timest
+amp_idx 
+action_type NOT 
+NULL 
+rag_inte
+ractions 
+interaction_id (PK), user_id 
+(FK → users), query, response, 
+data_source, confidence_score, 
+sources (JSON), created_at 
+M:1 with users user_id_idx,
+data_source
+_idx,created
+_at_idx 
+data_source IN 
+('verified_db', 
+'external_pending'), 
+confidence_score 
+BETWEEN 0 AND 1 
+Table 18: Database Schema Definition Table 
+4.8 Component Integration Specifications 
+Inter-component Communication Protocols: 
+1. Mobile App ↔ Backend: RESTful HTTP/HTTPS with JSON payloads 
+2. Backend ↔ RAG Engine: gRPC for low-latency communication 
+3. Backend ↔ Vector DB: ChromaDB client library over HTTP 
+4. Backend ↔ External APIs: HTTPS with exponential backoff retry 
+5. Admin Portal ↔ Backend: WebSocket for real-time notifications 
+6. Database Replication: PostgreSQL streaming replication 
+ 
+Data Flow Specifications: 
+1. User Registration Flow: Client → Mobile App → Auth Service → PostgreSQL → Response 
+2. Service Search Flow: Client → Mobile App → Search API → PostgreSQL/ChromaDB → 
+Response 
+55 
+2025/26 
+Addis Local Service Finder     
+3. RAG Query Flow: Client → Mobile App → RAG API → ChromaDB → LLM → Response 
+4. External Data Flow: Scheduler → External Service → Web Scraping → Staging DB → Admin 
+Review 
+5. Verification Flow: Admin → Admin Portal → Verification API → Staging DB → Main DB 
+Performance Specifications: 
+1. API Response Time: < 200ms for 95% of requests 
+2. RAG Query Latency: < 3 seconds for typical queries 
+3. Database Query Performance: < 100ms for indexed queries 
+4. Mobile App Launch Time: < 2 seconds cold start 
+5. Image Loading Time: < 1 second on 4G networks 
+6. Geolocation Accuracy: Within 50 meters in urban areas 
+Scalability Specifications: 
+1. Concurrent Users: Support for 10,000+ concurrent users 
+2. Database Connections: Pool of 200+ connections 
+3. API Throughput: 1000+ requests per second 
+4. Storage Scalability: Automatic scaling to 1TB+ 
+5. Vector Search: Support for 1M+ embedding vectors 
+6. External API Calls: Rate limited to 1000/day per service 
+56 
+2025/26 
+Addis Local Service Finder     
+References 
+Bibliography 
+1. Addis Ababa University, College of Technology and Built Environment. (2025). Industrial 
+Project Guideline 2025. Addis Ababa: Addis Ababa University Press. 
+2. Addis Ababa University, College of Technology and Built Environment. (2025). Project Proposal 
+Template 2025. Addis Ababa: Addis Ababa University Press. 
+3. Fowler, M. (2002). Patterns of Enterprise Application Architecture. Boston: Addison-Wesley 
+Professional. 
+4. Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). Design Patterns: Elements of Reusable 
+Object-Oriented Software. Boston: Addison-Wesley Professional. 
+5. Larman, C. (2004). Applying UML and Patterns: An Introduction to Object-Oriented Analysis 
+and Design and Iterative Development (3rd ed.). Upper Saddle River: Prentice Hall. 
+6. Sommerville, I. (2015). Software Engineering (10th ed.). Harlow: Pearson Education Limited. 
+Web Resources 
+1. FastAPI Documentation. https://fastapi.tiangolo.com/  
+2. Flutter Documentation. https://flutter.dev/docs  
+3. PostgreSQL Documentation. https://www.postgresql.org/docs/  
+4. ChromaDB Documentation. https://docs.trychroma.com/  
+5. LangChain Documentation. https://python.langchain.com/docs/get_started  
+6. Hugging Face Transformers Documentation. https://huggingface.co/docs/transformers/index 
+7. AWS Well-Architected Framework. https://aws.amazon.com/architecture/well-architected/  
+8. OWASP Application Security Verification Standard. 
+https://owasp.org/www-project-application-security-verification-standard/  
+9. UML Diagrams Tutorial. https://www.uml-diagrams.org/  
+10. Scrum Guide. https://www.scrumguides.org/scrum-guide.html  
+11. Google Maps Platform Documentation. https://developers.google.com/maps/documentation  
+12. React Documentation. https://reactjs.org/docs/getting-started.html 
+13. Material-UI Documentation. https://mui.com/material-ui/getting-started/ 
+14. Docker Documentation. https://docs.docker.com/  
+15. GitHub Actions Documentation. https://docs.github.com/en/actions  
