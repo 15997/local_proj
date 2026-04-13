@@ -4,51 +4,45 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
     background: {
-      default: '#0a0e1a', // Deep navy-black app background
-      paper: '#111827',   // Card/panel surfaces
+      default: '#0b0f19', // Deep navy-black app background
+      paper: '#141b2d',   // Card/panel surfaces
     },
     primary: {
-      main: '#6366f1',    // Indigo accent - buttons, links
+      main: '#6366f1',    // Indigo accent
     },
     secondary: {
-      main: '#10b981',    // Emerald green - success, verified badges
+      main: '#c084fc',    // Purple accent (from Monthly Active Users chart)
     },
     warning: {
-      main: '#f59e0b',    // Amber - pending states
+      main: '#f59e0b',
     },
     error: {
-      main: '#ef4444',    // Red - rejected, danger actions
+      main: '#ef4444',
+    },
+    success: {
+      main: '#10b981',    // Emerald green
     },
     text: {
-      primary: '#f9fafb', // Near-white readable text
-      secondary: '#9ca3af', // Muted grey labels
+      primary: '#f9fafb',
+      secondary: '#9ca3af',
     },
-    divider: 'rgba(255,255,255,0.08)', // Subtle glass dividers
+    divider: 'rgba(255,255,255,0.05)',
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h4: {
-      fontWeight: 600,
-    },
-    h5: {
-      fontWeight: 600,
-    },
-    h6: {
-      fontWeight: 600,
-    },
-    subtitle1: {
-      fontWeight: 500,
-    },
+    h4: { fontWeight: 600 },
+    h5: { fontWeight: 600 },
+    h6: { fontWeight: 600 },
+    subtitle1: { fontWeight: 500 },
   },
   components: {
     MuiCard: {
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: 'rgba(17, 24, 39, 0.7)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          backgroundColor: '#161d30', // Solid dark card background
+          border: '1px solid rgba(255,255,255,0.03)',
+          boxShadow: 'none',
           borderRadius: 12,
         },
       },

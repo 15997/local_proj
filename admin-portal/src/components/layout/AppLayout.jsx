@@ -4,11 +4,11 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 
-const drawerWidth = 260;
+const drawerWidth = 220;
 
-const AppLayout = () => {
+const AppLayout = ({ children }) => {
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#0b0f19' }}>
       <Sidebar />
       <Box
         component="main"
@@ -16,13 +16,13 @@ const AppLayout = () => {
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          width: `calc(100% - ${drawerWidth}px)`,
-          ml: `${drawerWidth}px`,
+          minWidth: 0,
+          overflow: 'hidden'
         }}
       >
         <TopBar />
-        <Box sx={{ p: 4, flexGrow: 1, overflow: 'auto' }}>
-          <Outlet />
+        <Box sx={{ px: 3, pb: 3, flexGrow: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+          {children || <Outlet />}
         </Box>
       </Box>
     </Box>

@@ -7,8 +7,7 @@ import {
   ListItemButton, 
   ListItemIcon, 
   ListItemText, 
-  Typography,
-  Chip
+  Typography
 } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
@@ -17,18 +16,19 @@ import PeopleIcon from '@mui/icons-material/PeopleAlt';
 import StarIcon from '@mui/icons-material/Star';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const drawerWidth = 260;
+const drawerWidth = 220;
 
 const menuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-  { text: 'Verification Queue', icon: <InboxIcon />, path: '/verification-queue', badge: 12 }, // mock badge
-  { text: 'Provider Management', icon: <GroupIcon />, path: '/providers' },
-  { text: 'User Management', icon: <PeopleIcon />, path: '/users' },
-  { text: 'Review Moderation', icon: <StarIcon />, path: '/reviews', badge: 3 }, // mock badge
-  { text: 'Analytics & Reports', icon: <TimelineIcon />, path: '/analytics' },
-  { text: 'System Logs', icon: <ListAltIcon />, path: '/logs' },
+  { text: 'Dashboard', icon: <DashboardIcon sx={{ fontSize: 18 }} />, path: '/dashboard' },
+  { text: 'Verification Queue', icon: <InboxIcon sx={{ fontSize: 18 }} />, path: '/verification-queue' },
+  { text: 'Provider Management', icon: <GroupIcon sx={{ fontSize: 18 }} />, path: '/providers' },
+  { text: 'User Management', icon: <PeopleIcon sx={{ fontSize: 18 }} />, path: '/users' },
+  { text: 'Review Moderation', icon: <StarIcon sx={{ fontSize: 18 }} />, path: '/reviews' },
+  { text: 'Analytics & Reports', icon: <TimelineIcon sx={{ fontSize: 18 }} />, path: '/analytics' },
+  { text: 'System Logs', icon: <ListAltIcon sx={{ fontSize: 18 }} />, path: '/logs' },
 ];
 
 const Sidebar = () => {
@@ -44,33 +44,36 @@ const Sidebar = () => {
         [`& .MuiDrawer-paper`]: { 
           width: drawerWidth, 
           boxSizing: 'border-box',
-          backgroundColor: 'background.paper',
-          borderRight: '1px solid rgba(255,255,255,0.08)'
+          backgroundColor: '#0a0d14',
+          borderRight: 'none',
+          display: 'flex',
+          flexDirection: 'column'
         },
       }}
     >
-      <Box sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
-        {/* Placeholder for real logo SVG */}
+      <Box sx={{ p: '20px 16px 24px 16px', display: 'flex', alignItems: 'center', gap: 1.5 }}>
         <Box 
           sx={{ 
             width: 32, 
             height: 32, 
-            bgcolor: 'primary.main', 
-            borderRadius: 1,
+            bgcolor: '#6b7aff', 
+            borderRadius: 1.5,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: 'white',
-            fontWeight: 'bold'
+            fontWeight: 700,
+            fontSize: '1rem'
           }}
         >
           A
         </Box>
-        <Typography variant="h6" color="text.primary" sx={{ letterSpacing: '-0.5px' }}>
-          Admin Portal
+        <Typography variant="h6" color="text.primary" sx={{ fontWeight: 600, fontSize: '1rem' }}>
+          Admin OS
         </Typography>
       </Box>
-      <List sx={{ px: 2 }}>
+
+      <List sx={{ px: 1.5, flexGrow: 1 }}>
         {menuItems.map((item) => {
           const isActive = location.pathname.startsWith(item.path);
           return (
@@ -78,9 +81,9 @@ const Sidebar = () => {
               <ListItemButton
                 onClick={() => navigate(item.path)}
                 sx={{
-                  borderRadius: 2,
-                  backgroundColor: isActive ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
-                  borderLeft: isActive ? '3px solid #6366f1' : '3px solid transparent',
+                  borderRadius: 1.5,
+                  backgroundColor: isActive ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
+                  padding: '6px 12px',
                   '&:hover': {
                     backgroundColor: 'rgba(255,255,255,0.05)',
                   },
@@ -88,8 +91,8 @@ const Sidebar = () => {
               >
                 <ListItemIcon 
                   sx={{ 
-                    color: isActive ? 'primary.main' : 'text.secondary',
-                    minWidth: 40
+                    color: isActive ? '#6b7aff' : '#6b7280',
+                    minWidth: 34
                   }}
                 >
                   {item.icon}
@@ -97,24 +100,56 @@ const Sidebar = () => {
                 <ListItemText 
                   primary={item.text} 
                   primaryTypographyProps={{ 
-                    variant: 'body2',
-                    fontWeight: isActive ? 600 : 500,
-                    color: isActive ? 'text.primary' : 'text.secondary'
+                    fontSize: '0.8rem',
+                    fontWeight: 500,
+                    color: isActive ? '#6b7aff' : '#9ca3af',
+                    whiteSpace: 'nowrap'
                   }} 
                 />
-                {item.badge && (
-                  <Chip 
-                    label={item.badge} 
-                    size="small" 
-                    color={item.text === 'Verification Queue' ? 'warning' : 'error'}
-                    sx={{ height: 20, fontSize: '0.7rem', fontWeight: 'bold' }}
-                  />
-                )}
               </ListItemButton>
             </ListItem>
           );
         })}
       </List>
+
+      <Box sx={{ p: 2 }}>
+        <Box 
+          sx={{ 
+            p: 1.5, 
+            borderRadius: 2, 
+            backgroundColor: '#111522',
+            border: '1px solid rgba(255,255,255,0.03)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            mb: 1.5
+          }}
+        >
+          <Typography variant="body2" sx={{ fontWeight: 600, color: '#f9fafb', mb: 0.25, fontSize: '0.8rem' }}>
+            Super Admin
+          </Typography>
+          <Typography variant="caption" sx={{ color: '#6b7280', fontSize: '0.7rem' }}>
+            admin@addis.com
+          </Typography>
+        </Box>
+        
+        <ListItemButton
+          onClick={() => navigate('/login')}
+          sx={{
+            borderRadius: 1.5,
+            padding: '6px 12px',
+            '&:hover': { backgroundColor: 'rgba(255,255,255,0.05)' },
+          }}
+        >
+          <ListItemIcon sx={{ color: '#6b7280', minWidth: 34 }}>
+            <LogoutIcon sx={{ fontSize: 18 }} />
+          </ListItemIcon>
+          <ListItemText 
+            primary="Log Out" 
+            primaryTypographyProps={{ fontSize: '0.8rem', color: '#9ca3af', fontWeight: 500 }} 
+          />
+        </ListItemButton>
+      </Box>
     </Drawer>
   );
 };

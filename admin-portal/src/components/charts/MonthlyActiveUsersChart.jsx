@@ -1,39 +1,42 @@
 import React from 'react';
 import { 
-  AreaChart, 
-  Area, 
+  LineChart, 
+  Line, 
   XAxis, 
+  CartesianGrid,
   ResponsiveContainer
 } from 'recharts';
 import { Box } from '@mui/material';
 
 const data = [
-  { name: 'JAN', uv: 200 },
-  { name: 'FEB', uv: 300 },
-  { name: 'MAR', uv: 250 },
-  { name: 'APR', uv: 700 }, // peak
-  { name: 'MAY', uv: 100 }, // drop
-  { name: 'JUN', uv: 600 }
+  { name: 'WEEK 1', uv: 100 },
+  { name: '', uv: 120 },
+  { name: '', uv: 80 },
+  { name: 'WEEK 2', uv: 150 },
+  { name: '', uv: 110 },
+  { name: '', uv: 230 },
+  { name: 'WEEK 3', uv: 190 },
+  { name: '', uv: 240 },
+  { name: '', uv: 200 },
+  { name: 'WEEK 4', uv: 280 },
+  { name: '', uv: 250 }
 ];
 
-const UserGrowthChart = () => {
+const MonthlyActiveUsersChart = () => {
   return (
     <Box sx={{ width: '100%', height: 200, position: 'relative' }}>
       <ResponsiveContainer>
-        <AreaChart
+        <LineChart
           data={data}
           margin={{ top: 20, right: 0, left: 0, bottom: 0 }}
         >
           <defs>
-            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4}/>
-              <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
-            </linearGradient>
-            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <filter id="glowPurple" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
+          <CartesianGrid strokeDasharray="3 3" vertical={true} horizontal={false} stroke="rgba(255,255,255,0.05)" />
           <XAxis 
             dataKey="name" 
             axisLine={false} 
@@ -41,19 +44,19 @@ const UserGrowthChart = () => {
             tick={{ fill: '#6b7280', fontSize: 10 }}
             dy={10}
           />
-          <Area 
-            type="monotone" 
+          <Line 
+            type="linear" 
             dataKey="uv" 
-            stroke="#6b7aff" 
+            stroke="#c084fc" 
             strokeWidth={3}
-            fillOpacity={1} 
-            fill="url(#colorUv)" 
-            style={{ filter: 'url(#glow)' }}
+            style={{ filter: 'url(#glowPurple)' }}
+            dot={false}
+            activeDot={false}
           />
-        </AreaChart>
+        </LineChart>
       </ResponsiveContainer>
     </Box>
   );
 };
 
-export default UserGrowthChart;
+export default MonthlyActiveUsersChart;
