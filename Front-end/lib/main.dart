@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'core/app_theme.dart'; 
 import 'screens/splash_screen.dart';
 import 'screens/role_selection.dart';
-import 'screens/home_screen.dart';
+import 'screens/client_home.dart';
 import 'screens/chatbot_screen.dart';
 
 // PROVIDER SCREENS
@@ -30,13 +30,8 @@ class AddisFinderApp extends StatelessWidget {
         '/role_selection': (context) => const RoleSelectionScreen(),
         '/home': (context) => const HomeScreen(),
         '/chatbot': (context) => const ChatbotScreen(),
-        
-        // FIX 1: Removed 'const' here
         '/provider_dashboard': (context) => ProviderMainScreen(),
-        
-        // FIX 2: Using the correct class from provider_profile_screen.dart
         '/profile_edit': (context) => const ProviderProfileScreen(),
-        
         '/settings': (context) => const SettingsSupportScreen(),
         '/reviews': (context) => const ProviderReviewsTab(),
       },
